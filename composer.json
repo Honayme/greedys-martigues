@@ -19,6 +19,7 @@
         "ext-tokenizer": "*",
         "astrotomic/laravel-translatable": "^11.0.0",
         "bagisto/pwa": "dev-master",
+        "bagisto/rest-api": "^2.2",
         "barryvdh/laravel-dompdf": "^2.0.0",
         "codenteq/stripe-payment-gateway": "^1.5",
         "diglactic/laravel-breadcrumbs": "^8.0",
@@ -46,7 +47,8 @@
         "pusher/pusher-php-server": "^7.0",
         "shetabit/visitor": "^4.1",
         "spatie/laravel-responsecache": "^7.4",
-        "spatie/laravel-sitemap": "^7.3"
+        "spatie/laravel-sitemap": "^7.3",
+        "whichbrowser/parser": "^2.1"
     },
     "require-dev": {
         "bagisto/laravel-datafaker": "^2.2.0",

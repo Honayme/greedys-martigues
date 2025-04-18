@@ -90,9 +90,9 @@
 
             <p class="text-xs font-medium">
                 {{ core()->getConfigData('general.content.header_offer.title') }}
-                
-                <a 
-                    href="{{ core()->getConfigData('general.content.header_offer.redirection_link') }}" 
+
+                <a
+                    href="{{ core()->getConfigData('general.content.header_offer.redirection_link') }}"
                     class="underline"
                     role="button"
                 >
@@ -112,17 +112,15 @@
                         tabindex="0"
                         @click="localeToggler = ! localeToggler"
                     >
+
+
                         <img
-                            src="{{ ! empty(core()->getCurrentLocale()->logo_url)
-                                    ? core()->getCurrentLocale()->logo_url
-                                    : bagisto_asset('images/default-language.svg')
-                                }}"
-                            class="h-full"
-                            alt="@lang('shop::app.components.layouts.header.desktop.top.default-locale')"
+                            src="{{ asset('storage/custom-pictures/greedys-creation-logo.png') }}"
+                            alt="Greedy's Création Logo"
                             width="24"
                             height="16"
-                        />
-                        
+                        >
+
                         <span>
                             {{ core()->getCurrentChannel()->locales()->orderBy('name')->where('code', app()->getLocale())->value('name') }}
                         </span>
@@ -134,7 +132,7 @@
                         ></span>
                     </div>
                 </x-slot>
-            
+
                 <!-- Dropdown Content -->
                 <x-slot:content class="!p-0">
                     <v-locale-switcher></v-locale-switcher>
@@ -170,13 +168,19 @@
                 class="flex cursor-pointer items-center gap-2.5 px-5 py-2 text-base hover:bg-gray-100"
                 :class="{'bg-gray-100': locale.code == '{{ app()->getLocale() }}'}"
                 v-for="locale in locales"
-                @click="change(locale)"                  
+                @click="change(locale)"
             >
-                <img
+<!--                <img
                     :src="locale.logo_url || '{{ bagisto_asset('images/default-language.svg') }}'"
                     width="24"
                     height="16"
-                />
+                />-->
+                    <img
+                        src="{{ asset('storage/custom-pictures/greedys-creation-logo.png') }}"
+                        alt="Greedy's Création Logo"
+                        width="24"
+                        height="16"
+                    >
 
                 @{{ locale.name }}
             </span>

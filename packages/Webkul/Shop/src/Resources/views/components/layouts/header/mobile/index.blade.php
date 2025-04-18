@@ -26,10 +26,10 @@
                     <div class="flex items-center justify-between">
                         <a href="{{ route('shop.home.index') }}">
                             <img
-                                src="{{ core()->getCurrentChannel()->logo_url ?? bagisto_asset('images/logo.svg') }}"
-                                alt="{{ config('app.name') }}"
-                                width="131"
-                                height="29"
+                                src="{{ asset('storage/custom-pictures/greedys-creation-logo.png') }}"
+                                alt="Greedy's Création Logo"
+                                width="125"
+                                height="35"
                             >
                         </a>
                     </div>
@@ -82,23 +82,53 @@
 
             <a
                 href="{{ route('shop.home.index') }}"
-                class="max-h-[30px]"
+                class="max-h-[30px] top-[-10px]"
                 aria-label="@lang('shop::app.components.layouts.header.bagisto')"
             >
-                <img
+<!--                <img
                     src="{{ core()->getCurrentChannel()->logo_url ?? bagisto_asset('images/logo.svg') }}"
                     alt="{{ config('app.name') }}"
                     width="131"
                     height="29"
+                >-->
+                <img
+                    src="{{ asset('storage/custom-pictures/greedys-creation-logo.png') }}"
+                    alt="Greedy's Création Logo"
+                    width="131"
+                    height="29"
                 >
             </a>
-            
+
             {!! view_render_event('bagisto.shop.components.layouts.header.mobile.logo.after') !!}
         </div>
 
         <!-- Right Navigation -->
         <div>
             <div class="flex items-center gap-x-5 max-md:gap-x-4">
+                <ul class="flex items-center space-x-6 text-base font-medium text-gray-700">
+                    <li class="relative mx-4">
+                        <a href="https://www.facebook.com/stephane.moustachatte.5" class="hover:text-gray-900 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 50 50">
+                                <path d="M41,4H9C6.24,4,4,6.24,4,9v32c0,2.76,2.24,5,5,5h32c2.76,0,5-2.24,5-5V9C46,6.24,43.76,4,41,4z M37,19h-2c-2.14,0-3,0.5-3,2 v3h5l-1,5h-4v15h-5V29h-4v-5h4v-3c0-4,2-7,6-7c2.9,0,4,1,4,1V19z"></path>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="relative mx-4">
+                        <a href="https://www.instagram.com/kmillewardrobe/?hl=fr" class="hover:text-gray-900 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 50 50">
+                                <path d="M 16 3 C 8.8324839 3 3 8.8324839 3 16 L 3 34 C 3 41.167516 8.8324839 47 16 47 L 34 47 C 41.167516 47 47 41.167516 47 34 L 47 16 C 47 8.8324839 41.167516 3 34 3 L 16 3 z M 16 5 L 34 5 C 40.086484 5 45 9.9135161 45 16 L 45 34 C 45 40.086484 40.086484 45 34 45 L 16 45 C 9.9135161 45 5 40.086484 5 34 L 5 16 C 5 9.9135161 9.9135161 5 16 5 z M 37 11 A 2 2 0 0 0 35 13 A 2 2 0 0 0 37 15 A 2 2 0 0 0 39 13 A 2 2 0 0 0 37 11 z M 25 14 C 18.936712 14 14 18.936712 14 25 C 14 31.063288 18.936712 36 25 36 C 31.063288 36 36 31.063288 36 25 C 36 18.936712 31.063288 14 25 14 z M 25 16 C 29.982407 16 34 20.017593 34 25 C 34 29.982407 29.982407 34 25 34 C 20.017593 34 16 29.982407 16 25 C 16 20.017593 20.017593 16 25 16 z"></path>
+                            </svg>
+                        </a>
+                    </li>
+                    <li class="relative mx-4">
+                        <a href="https://www.tiktok.com/@kmillewardrobe" class="hover:text-gray-900 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewBox="0 0 50 50">
+                                <path d="M41,4H9C6.243,4,4,6.243,4,9v32c0,2.757,2.243,5,5,5h32c2.757,0,5-2.243,5-5V9C46,6.243,43.757,4,41,4z M37.006,22.323 c-0.227,0.021-0.457,0.035-0.69,0.035c-2.623,0-4.928-1.349-6.269-3.388c0,5.349,0,11.435,0,11.537c0,4.709-3.818,8.527-8.527,8.527 s-8.527-3.818-8.527-8.527s3.818-8.527,8.527-8.527c0.178,0,0.352,0.016,0.527,0.027v4.202c-0.175-0.021-0.347-0.053-0.527-0.053 c-2.404,0-4.352,1.948-4.352,4.352s1.948,4.352,4.352,4.352s4.527-1.894,4.527-4.298c0-0.095,0.042-19.594,0.042-19.594h4.016 c0.378,3.591,3.277,6.425,6.901,6.685V22.323z"></path>
+                            </svg>
+                        </a>
+                    </li>
+                </ul>
+
                 {!! view_render_event('bagisto.shop.components.layouts.header.mobile.compare.before') !!}
 
                 @if($showCompare)
@@ -126,7 +156,7 @@
                         <x-slot:toggle>
                             <span class="icon-users cursor-pointer text-2xl"></span>
                         </x-slot>
-    
+
                         <!-- Guest Dropdown -->
                         @guest('customer')
                             <x-slot:content>
@@ -134,14 +164,14 @@
                                     <p class="font-dmserif text-xl">
                                         @lang('shop::app.components.layouts.header.welcome-guest')
                                     </p>
-    
+
                                     <p class="text-sm">
                                         @lang('shop::app.components.layouts.header.dropdown-text')
                                     </p>
                                 </div>
-    
+
                                 <p class="mt-3 w-full border border-zinc-200"></p>
-    
+
                                 {!! view_render_event('bagisto.shop.components.layouts.header.mobile.index.customers_action.before') !!}
 
                                 <div class="mt-6 flex gap-4">
@@ -153,21 +183,21 @@
                                     >
                                         @lang('shop::app.components.layouts.header.sign-in')
                                     </a>
-    
+
                                     <a
                                         href="{{ route('shop.customers.register.index') }}"
                                         class="m-0 mx-auto block w-max cursor-pointer rounded-2xl border-2 border-navyBlue bg-white px-7 py-3.5 text-center text-base font-medium text-navyBlue ltr:ml-0 rtl:mr-0"
                                     >
                                         @lang('shop::app.components.layouts.header.sign-up')
                                     </a>
-    
+
                                     {!! view_render_event('bagisto.shop.components.layouts.header.mobile.index.sign_in_button.after') !!}
                                 </div>
 
                                 {!! view_render_event('bagisto.shop.components.layouts.header.mobile.index.customers_action.after') !!}
                             </x-slot>
                         @endguest
-    
+
                         <!-- Customers Dropdown -->
                         @auth('customer')
                             <x-slot:content class="!p-0">
@@ -176,31 +206,31 @@
                                         @lang('shop::app.components.layouts.header.welcome')’
                                         {{ auth()->guard('customer')->user()->first_name }}
                                     </p>
-    
+
                                     <p class="text-sm">
                                         @lang('shop::app.components.layouts.header.dropdown-text')
                                     </p>
                                 </div>
-    
+
                                 <p class="mt-3 w-full border border-zinc-200"></p>
-    
+
                                 <div class="mt-2.5 grid gap-1 pb-2.5">
                                     {!! view_render_event('bagisto.shop.components.layouts.header.mobile.index.profile_dropdown.links.before') !!}
-    
+
                                     <a
                                         class="cursor-pointer px-5 py-2 text-base hover:bg-gray-100"
                                         href="{{ route('shop.customers.account.profile.index') }}"
                                     >
                                         @lang('shop::app.components.layouts.header.profile')
                                     </a>
-    
+
                                     <a
                                         class="cursor-pointer px-5 py-2 text-base hover:bg-gray-100"
                                         href="{{ route('shop.customers.account.orders.index') }}"
                                     >
                                         @lang('shop::app.components.layouts.header.orders')
                                     </a>
-    
+
                                     @if ($showWishlist)
                                         <a
                                             class="cursor-pointer px-5 py-2 text-base hover:bg-gray-100"
@@ -209,7 +239,7 @@
                                             @lang('shop::app.components.layouts.header.wishlist')
                                         </a>
                                     @endif
-    
+
                                     <!--Customers logout-->
                                     @auth('customer')
                                         <x-shop::form
@@ -217,7 +247,7 @@
                                             action="{{ route('shop.customer.session.destroy') }}"
                                             id="customerLogout"
                                         />
-    
+
                                         <a
                                             class="cursor-pointer px-5 py-2 text-base hover:bg-gray-100"
                                             href="{{ route('shop.customer.session.destroy') }}"
@@ -226,7 +256,7 @@
                                             @lang('shop::app.components.layouts.header.logout')
                                         </a>
                                     @endauth
-    
+
                                     {!! view_render_event('bagisto.shop.components.layouts.header.mobile.index.profile_dropdown.links.after') !!}
                                 </div>
                             </x-slot>
@@ -234,7 +264,7 @@
                     </x-shop::dropdown>
                 </div>
 
-                <!-- For Medium and small screen --> 
+                <!-- For Medium and small screen -->
                 <div class="md:hidden">
                     @guest('customer')
                         <a
@@ -263,8 +293,8 @@
 
     <!-- Serach Catalog Form -->
     <form action="{{ route('shop.search.index') }}" class="flex w-full items-center">
-        <label 
-            for="organic-search" 
+        <label
+            for="organic-search"
             class="sr-only"
         >
             @lang('shop::app.components.layouts.header.search')

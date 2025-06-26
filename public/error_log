@@ -3234,3 +3234,9 @@ Stack trace:
 #15 [internal function]: Illuminate\Foundation\Bootstrap\HandleExceptions->Illuminate\Foundation\Bootstrap\{closure}(Object(Illuminate\View\ViewException))
 #16 {main}
   thrown in /home/greedys/bagisto/storage/framework/views/ebca8d4fbc568a59a37a5347b8e02ea3.php on line 31
+[25-Apr-2025 15:40:28 Europe/Paris] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/greedys/bagisto/vendor/intervention/image/src/Intervention/Image/Gd/Decoder.php on line 154
+[25-Apr-2025 15:40:37 Europe/Paris] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/greedys/bagisto/vendor/intervention/image/src/Intervention/Image/Gd/Decoder.php on line 154
+[25-Apr-2025 15:41:29 Europe/Paris] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/greedys/bagisto/vendor/intervention/image/src/Intervention/Image/Gd/Decoder.php on line 154
+[25-Apr-2025 15:57:27 Europe/Paris] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/greedys/bagisto/vendor/intervention/image/src/Intervention/Image/Gd/Decoder.php on line 154
+[25-Apr-2025 17:38:19 Europe/Paris] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/greedys/bagisto/vendor/intervention/image/src/Intervention/Image/Gd/Decoder.php on line 154
+[25-Apr-2025 17:44:48 Europe/Paris] PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 12288 bytes) in /home/greedys/bagisto/vendor/intervention/image/src/Intervention/Image/Gd/Decoder.php on line 154

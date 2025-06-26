@@ -12,7 +12,7 @@ return [
     | and used as needed; however, this mailer will be used by default.
     |
     */
-    'default' => env('MAIL_MAILER', 'smtp'),
+    'default' => env('MAIL_MAILER', 'mailjet'),
 
     /*
     |--------------------------------------------------------------------------
@@ -41,6 +41,10 @@ return [
             'password'    => env('MAIL_PASSWORD'),
             'timeout'     => null,
             'verify_peer' => false,
+        ],
+
+        'mailjet' => [
+            'transport' => 'mailjet',
         ],
 
         'ses' => [

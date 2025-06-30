@@ -1050,7 +1050,7 @@ return [
             'shipping-handling'          => 'Frais de livraison',
             'shipping-handling-excl-tax' => 'Frais de livraison (Hors taxes)',
             'shipping-handling-incl-tax' => 'Frais de livraison (TTC)',
-            'sku'                        => 'SKU',
+            'sku'                        => 'Référence produit',
             'subtotal'                   => 'Sous-total',
             'subtotal-excl-tax'          => 'Sous-total (Hors taxes)',
             'subtotal-incl-tax'          => 'Sous-total (TTC)',

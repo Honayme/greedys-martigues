@@ -9,11 +9,9 @@
         </p>
 
         <p style="font-size: 16px;color: #5E5E5E;line-height: 24px;">
-            {!! __('shop::app.emails.orders.canceled.greeting', [
-                'order_id' => '<a href="' . route('shop.customers.account.orders.view', $order->id) . '" style="color: #2969FF;">#' . $order->increment_id . '</a>',
-                'created_at' => core()->formatDate($order->created_at, 'Y-m-d H:i:s')
-                ])
-            !!}
+            Votre commande n°{{ $order->increment_id }}, passée le
+            <strong>{{ \Carbon\Carbon::parse($order->created_at)->translatedFormat('l j F') }}</strong>,
+            a bien été annulée.
         </p>
     </div>
 
@@ -32,11 +30,11 @@
                     {{ $order->shipping_address->company_name ?? '' }}<br/>
 
                     {{ $order->shipping_address->name }}<br/>
-                    
+
                     {{ $order->shipping_address->address }}<br/>
-                    
+
                     {{ $order->shipping_address->postcode . " " . $order->shipping_address->city }}<br/>
-                    
+
                     {{ $order->shipping_address->state }}<br/>
 
                     ---<br/>
@@ -64,11 +62,11 @@
                     {{ $order->billing_address->company_name ?? '' }}<br/>
 
                     {{ $order->billing_address->name }}<br/>
-                    
+
                     {{ $order->billing_address->address }}<br/>
-                    
+
                     {{ $order->billing_address->postcode . " " . $order->billing_address->city }}<br/>
-                    
+
                     {{ $order->billing_address->state }}<br/>
 
                     ---<br/>
@@ -221,7 +219,7 @@
                         {{ core()->formatPrice($order->shipping_amount, $order->order_currency_code) }}
                     </span>
                 </div>
-                
+
                 <div style="display: grid;gap: 20px;grid-template-columns: repeat(2, minmax(0, 1fr));">
                     <span>
                         @lang('shop::app.emails.orders.shipping-handling-incl-tax')

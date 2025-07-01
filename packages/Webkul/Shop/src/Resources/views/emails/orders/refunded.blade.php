@@ -9,11 +9,8 @@
         </p>
 
         <p style="font-size: 16px;color: #5E5E5E;line-height: 24px;">
-            @lang('shop::app.emails.orders.refunded.greeting', [
-                'invoice_id' => $refund->increment_id,
-                'order_id'   => '<a href="' . route('shop.customers.account.orders.view', $refund->order_id) . '" style="color: #2969FF;">#' . $refund->order->increment_id . '</a>',
-                'created_at' => core()->formatDate($refund->order->created_at, 'Y-m-d H:i:s')
-            ])
+            Un remboursement concernant votre commande n°{{ $refund->order->increment_id }}
+            a été effectué le <strong>{{ \Carbon\Carbon::parse($refund->created_at)->translatedFormat('l j F') }}</strong>.
         </p>
     </div>
 
@@ -32,11 +29,11 @@
                     {{ $refund->order->shipping_address->company_name ?? '' }}<br/>
 
                     {{ $refund->order->shipping_address->name }}<br/>
-                    
+
                     {{ $refund->order->shipping_address->address }}<br/>
-                    
+
                     {{ $refund->order->shipping_address->postcode . " " . $refund->order->shipping_address->city }}<br/>
-                    
+
                     {{ $refund->order->shipping_address->state }}<br/>
 
                     ---<br/>
@@ -64,11 +61,11 @@
                     {{ $refund->order->billing_address->company_name ?? '' }}<br/>
 
                     {{ $refund->order->billing_address->name }}<br/>
-                    
+
                     {{ $refund->order->billing_address->address }}<br/>
-                    
+
                     {{ $refund->order->billing_address->postcode . " " . $refund->order->billing_address->city }}<br/>
-                    
+
                     {{ $refund->order->billing_address->state }}<br/>
 
                     ---<br/>
@@ -104,7 +101,7 @@
                     @foreach (['name', 'price', 'qty'] as $item)
                         <th style="text-align: left;padding: 15px">
                             @lang('shop::app.emails.orders.' . $item)
-                        </th>    
+                        </th>
                     @endforeach
                 </tr>
             </thead>
@@ -216,7 +213,7 @@
                         {{ core()->formatPrice($refund->shipping_amount, $refund->order_currency_code) }}
                     </span>
                 </div>
-                
+
                 <div style="display: grid;gap: 20px;grid-template-columns: repeat(2, minmax(0, 1fr));">
                     <span>
                         @lang('shop::app.emails.orders.shipping-handling-incl-tax')

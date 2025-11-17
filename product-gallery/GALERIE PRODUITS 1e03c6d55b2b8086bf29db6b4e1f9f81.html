@@ -1,0 +1,708 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>GALERIE PRODUITS</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	justify-content: space-between;
+}
+
+.column {
+	padding: 0 1em;
+}
+
+.column:first-child {
+	padding-left: 0;
+}
+
+.column:last-child {
+	padding-right: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+	border-collapse: collapse;
+}
+
+table {
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="1e03c6d5-5b2b-8086-bf29-db6b4e1f9f81" class="page sans"><header><h1 class="page-title">GALERIE PRODUITS</h1><p class="page-description"></p></header><div class="page-body"><div id="1e03c6d5-5b2b-80aa-bd23-e19a9ba636ce" class="collection-content"><h4 class="collection-title">Galerie de produits</h4><table class="collection-content"><thead><tr><th><span class="icon property-icon"><img src="https://www.notion.so/icons/font_gray.svg" style="width:14px;height:14px;display:block"/></span>Nom</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/clock_gray.svg" style="width:14px;height:14px;display:block"/></span>Date de création</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/description_gray.svg" style="width:14px;height:14px;display:block"/></span>Traduction par l’IA</th><th><span class="icon property-icon"><img src="https://www.notion.so/icons/list_gray.svg" style="width:14px;height:14px;display:block"/></span>Étiquettes</th></tr></thead><tbody><tr id="2a63c6d5-5b2b-80e5-b2eb-ff78b01f7842"><td class="cell-title"><a href="Bague%20acier%20inoxydable%20et%20bois%20,%20r%C3%A9glable%2025%E2%82%AC%20disp%202a63c6d55b2b80e5b2ebff78b01f7842.html">Bague acier inoxydable et bois , réglable.  25€ .dispo 1</a></td><td class="cell-OWCF"><time>@9 novembre 2025 23:51</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-8059-8f07-d5a19679bdd1"><td class="cell-title"><a href="Bague%20acier%20inoxydable,%20r%C3%A9sine%20marron,%20r%C3%A9glable%2025%202a63c6d55b2b80598f07d5a19679bdd1.html">Bague acier inoxydable, résine marron, réglable. 25€</a></td><td class="cell-OWCF"><time>@9 novembre 2025 23:52</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-8020-adc6-cadaf2411b63"><td class="cell-title"><a href="Bague%20acier%20inoxydable,%20resine%20bleue,%20r%C3%A9glable,%2025%202a63c6d55b2b8020adc6cadaf2411b63.html">Bague acier inoxydable, resine bleue, réglable, 25€.</a></td><td class="cell-OWCF"><time>@9 novembre 2025 23:53</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-8095-8b80-d83c7b1227b3"><td class="cell-title"><a href="Bague%20acier%20inoxydable,%20resine%20l%C3%A9opard,%20r%C3%A9glage,%202%202a63c6d55b2b80958b80d83c7b1227b3.html">Bague acier inoxydable, resine léopard, réglage, 25€.</a></td><td class="cell-OWCF"><time>@9 novembre 2025 23:54</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-80b8-8432-dbcf44a4b83d"><td class="cell-title"><a href="Bague%20acier%20inoxydable,%203%20cristaux,%20brun,%20blanc,et%202a63c6d55b2b80b88432dbcf44a4b83d.html">Bague acier inoxydable, 3 cristaux, brun, blanc,et ambre réglable. 29€</a></td><td class="cell-OWCF"><time>@9 novembre 2025 23:54</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-8095-91f7-fced81c74183"><td class="cell-title"><a href="Bague%20acier,%203%20cristaux,%20vert%20jade,%C3%A9meraude,%20r%C3%A9gla%202a63c6d55b2b809591f7fced81c74183.html">Bague acier, 3 cristaux, vert jade,émeraude, réglable, 29€</a></td><td class="cell-OWCF"><time>@9 novembre 2025 23:54</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-80a1-9c4f-f3d27f955b8b"><td class="cell-title"><a href="Bague%20acier%20inoxydable,%203%20cristaux,%20noir,gris,%20bla%202a63c6d55b2b80a19c4ff3d27f955b8b.html">Bague acier inoxydable, 3 cristaux, noir,gris, blanc, 29€</a></td><td class="cell-OWCF"><time>@9 novembre 2025 23:55</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-8015-b6ff-cffa7e876f2f"><td class="cell-title"><a href="Bague%20acier%20inoxydable%20dor%C3%A9,%20r%C3%A9glable,%2025%E2%82%AC%202a63c6d55b2b8015b6ffcffa7e876f2f.html">Bague acier inoxydable doré,  réglable, 25€</a></td><td class="cell-OWCF"><time>@9 novembre 2025 23:56</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-803c-89e2-d3eef62f779d"><td class="cell-title"><a href="Bague%20acier%20dor%C3%A9,%20r%C3%A9glable%2025%E2%82%AC%202a63c6d55b2b803c89e2d3eef62f779d.html">Bague acier doré, réglable 25€</a></td><td class="cell-OWCF"><time>@9 novembre 2025 23:56</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-808a-a784-c4888d48f524"><td class="cell-title"><a href="Bague%20acier%20inoxydable%20dor%C3%A9,%20r%C3%A9glable%2025%E2%82%AC%202a63c6d55b2b808aa784c4888d48f524.html">Bague acier inoxydable doré,  réglable 25€</a></td><td class="cell-OWCF"><time>@9 novembre 2025 23:56</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-806d-965e-e1951cda6986"><td class="cell-title"><a href="Bague%20acier%20inoxydable%20et%20cristaux,%20verts,%20r%C3%A9glabl%202a63c6d55b2b806d965ee1951cda6986.html">Bague acier inoxydable et cristaux, verts, réglable, 32€</a></td><td class="cell-OWCF"><time>@9 novembre 2025 23:56</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-804e-9d79-fb02b5e661b2"><td class="cell-title"><a href="Bague%20acier%20inoxydable%20dor%C3%A9,%20cristaux%20jaune,%20vert,%202a63c6d55b2b804e9d79fb02b5e661b2.html">Bague acier inoxydable doré, cristaux jaune, vert, blanc, réglable, 32€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:00</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-8086-83c4-c2d522f73c0f"><td class="cell-title"><a href="Bague%20acier%20inoxydable%20dor%C3%A9,%20cristaux%20bleus,%20r%C3%A9gla%202a63c6d55b2b808683c4c2d522f73c0f.html">Bague acier inoxydable doré, cristaux bleus, réglable,  32€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:00</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-80c4-a6df-d1d1743b126a"><td class="cell-title"><a href="Boucles%20d&#x27;oreilles%20acier%20inoxydable,%20cristaux,%2032%E2%82%AC%202a63c6d55b2b80c4a6dfd1d1743b126a.html">Boucles d&#x27;oreilles acier inoxydable, cristaux, 32€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:01</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-80a2-b364-f30f97f91ce8"><td class="cell-title"><a href="Bague%20acier%20inoxydable,%20cristal%2025%E2%82%AC%202a63c6d55b2b80a2b364f30f97f91ce8.html">Bague acier inoxydable, cristal.25€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:02</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-80cf-8ca2-e33d7280ce7d"><td class="cell-title"><a href="Bague%20acier%20inoxydable,%20cristaux%2032%E2%82%AC%202a63c6d55b2b80cf8ca2e33d7280ce7d.html">Bague acier inoxydable, cristaux 32€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:02</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-80d1-9580-e7def3e8415c"><td class="cell-title"><a href="Bracelet%20acier%20inoxydable%20dor%C3%A9,%20pampilles%20fleur,%202%202a63c6d55b2b80d19580e7def3e8415c.html">Bracelet acier inoxydable doré, pampilles fleur, 29€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:03</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-8018-b77d-cb228f5cbe94"><td class="cell-title"><a href="Bague%20madonne,%20acier%20inoxydable%20dor%C3%A9,%20r%C3%A9glable,%2029%202a63c6d55b2b8018b77dcb228f5cbe94.html">Bague madonne, acier inoxydable doré, réglable, 29€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:04</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-8057-bb19-fda0829489df"><td class="cell-title"><a href="Bague%20madonne%20acier%20inoxydable%20dor%C3%A9,%20r%C3%A9glable%2025%E2%82%AC%202a63c6d55b2b8057bb19fda0829489df.html">Bague madonne acier inoxydable doré, réglable 25€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:05</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-80e3-b52b-f770e070f25a"><td class="cell-title"><a href="Bague%20acier%20inoxydable%20dor%C3%A9,%20fleur,%2025%E2%82%AC%202a63c6d55b2b80e3b52bf770e070f25a.html">Bague acier inoxydable doré, fleur,  25€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:05</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-80b8-9590-c05b4b4b6eb6"><td class="cell-title"><a href="Bagues%20acier%20inoxydable,%20fleur%20r%C3%A9sine,%20r%C3%A9glable,%202%202a63c6d55b2b80b89590c05b4b4b6eb6.html">Bagues acier inoxydable, fleur résine,  réglable,  22€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:06</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-8001-a865-f792902fe210"><td class="cell-title"><a href="Boucles%20d&#x27;oreilles%20acier%20inoxydable,%20ac%C3%A9tate%20l%C3%A9opa%202a63c6d55b2b8001a865f792902fe210.html">Boucles d&#x27;oreilles acier inoxydable, acétate léopard. 29€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:07</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-8091-9848-ec110f7528ea"><td class="cell-title"><a href="Boucles%20d&#x27;oreilles%20acier%20inoxydable%20et%20ac%C3%A9tate,%2039%202a63c6d55b2b80919848ec110f7528ea.html">Boucles d&#x27;oreilles acier inoxydable et acétate,  39€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:08</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-800c-9867-c10f5998cf33"><td class="cell-title"><a href="Boucles%20d&#x27;oreilles%20acier%20inoxydable%20et%20ac%C3%A9tate,%2039%202a63c6d55b2b800c9867c10f5998cf33.html">Boucles d&#x27;oreilles acier inoxydable et acétate, 39€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:08</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-80b0-a1a3-c55233a48e5f"><td class="cell-title"><a href="Boucles%20d&#x27;oreilles%20acier%20inoxydable%20et%20ac%C3%A9tate%2039%E2%82%AC%202a63c6d55b2b80b0a1a3c55233a48e5f.html">Boucles d&#x27;oreilles acier inoxydable et acétate 39€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:08</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-80a9-aa55-f1f3c28aee37"><td class="cell-title"><a href="Bague%20acier%20inoxydable%20et%20turquoise%20africaine,%20r%C3%A9g%202a63c6d55b2b80a9aa55f1f3c28aee37.html">Bague acier inoxydable et turquoise africaine, réglable 39€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:09</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-80ee-a080-e1e2b85f368f"><td class="cell-title"><a href="Bague%20acier%20inoxydable%20et%20%C5%93il%20de%20tigre,%20r%C3%A9glable,%20%202a63c6d55b2b80eea080e1e2b85f368f.html">Bague acier inoxydable et œil de tigre, réglable,  39€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:09</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-809f-90f4-c1c79a00c4c6"><td class="cell-title"><a href="Boucles%20d&#x27;oreilles%20acier%20inoxydable%20dor%C3%A9%20et%20ac%C3%A9tat%202a63c6d55b2b809f90f4c1c79a00c4c6.html">Boucles d&#x27;oreilles acier inoxydable doré et acétate. 39€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:09</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-8006-a176-c614057336fb"><td class="cell-title"><a href="Boucles%20d&#x27;oreilles%20acier%20inoxydable%20dor%C3%A9%20et%20ac%C3%A9tat%202a63c6d55b2b8006a176c614057336fb.html">Boucles d&#x27;oreilles acier  inoxydable doré et acétate 32€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:10</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a63c6d5-5b2b-8006-94b6-fed5189d52cb"><td class="cell-title"><a href="Bracelet%20acier%20dor%C3%A9%20pampilles%20fleur,%2029%E2%82%AC%202a63c6d55b2b800694b6fed5189d52cb.html">Bracelet acier doré pampilles fleur, 29€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 00:10</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a73c6d5-5b2b-80b0-bb41-d84e7170c3d1"><td class="cell-title"><a href="Cr%C3%A9ation%20-%20Bracelets%20cha%C3%AEne%20acier%20inoxydable,%20perl%202a73c6d55b2b80b0bb41d84e7170c3d1.html">Création - Bracelets chaîne acier inoxydable, perles argent plaqué or, pierres semi précieuse, pièce unique.</a></td><td class="cell-OWCF"><time>@10 novembre 2025 20:51</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a73c6d5-5b2b-8043-860e-e1d0ecb37609"><td class="cell-title"><a href="Cr%C3%A9ation%20-%20Bracelets%20cha%C3%AEne%20acier%20inoxydable,%20perl%202a73c6d55b2b8043860ee1d0ecb37609.html">Création - Bracelets chaîne acier inoxydable, perles argent plaqué or, pierres semi précieuse, pièce unique. Agate verte - 25€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 21:10</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a73c6d5-5b2b-8019-a1cf-daea4f01f027"><td class="cell-title"><a href="Cr%C3%A9ation%20-%20Bracelets%20cha%C3%AEne%20acier%20inoxydable,%20perl%202a73c6d55b2b8019a1cfdaea4f01f027.html">Création - Bracelets chaîne acier inoxydable, perles argent plaqué or, pierres semi précieuse, pièce unique. Turquoise africaine - 25€</a></td><td class="cell-OWCF"><time>@10 novembre 2025 21:11</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a73c6d5-5b2b-80e9-a4ca-ef0e1f800abc"><td class="cell-title"><a href="Gold%20stone%20-%2025%E2%82%AC%20Cr%C3%A9ation%20-%20Bracelets%20cha%C3%AEne%20acier%202a73c6d55b2b80e9a4caef0e1f800abc.html">Gold stone - 25€ Création - Bracelets chaîne acier inoxydable, perles argent plaqué or, pierres semi précieuse, pièce unique.</a></td><td class="cell-OWCF"><time>@10 novembre 2025 21:12</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a73c6d5-5b2b-80ec-abc7-dac7bdc8de27"><td class="cell-title"><a href="Agate%20-%2025%E2%82%AC%20Cr%C3%A9ation%20-%20Bracelets%20cha%C3%AEne%20acier%20inox%202a73c6d55b2b80ecabc7dac7bdc8de27.html">Agate - 25€ Création - Bracelets chaîne acier inoxydable, perles argent plaqué or, pierres semi précieuse, pièce unique.</a></td><td class="cell-OWCF"><time>@10 novembre 2025 21:12</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a73c6d5-5b2b-8039-84c7-e275f2642f76"><td class="cell-title"><a href="Unakite%20-%2025%E2%82%AC%20Cr%C3%A9ation%20-%20Bracelets%20cha%C3%AEne%20acier%20in%202a73c6d55b2b803984c7e275f2642f76.html">Unakite - 25€ Création - Bracelets chaîne acier inoxydable, perles argent plaqué or, pierres semi précieuse, pièce unique.</a></td><td class="cell-OWCF"><time>@10 novembre 2025 21:12</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a73c6d5-5b2b-804c-821d-d1032ef1237c"><td class="cell-title"><a href="Lapis%20lazuli%20-%2025%E2%82%AC%20Cr%C3%A9ation%20-%20Bracelets%20cha%C3%AEne%20aci%202a73c6d55b2b804c821dd1032ef1237c.html">Lapis lazuli - 25€ Création - Bracelets chaîne acier inoxydable, perles argent plaqué or, pierres semi précieuse, pièce unique.</a></td><td class="cell-OWCF"><time>@10 novembre 2025 21:41</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a73c6d5-5b2b-8029-8690-c81d33fae748"><td class="cell-title"><a href="Les%20cr%C3%A9ations,%20bracelets%20doubles%20rang,%20pierres%20sem%202a73c6d55b2b80298690c81d33fae748.html">Les créations,  bracelets doubles rang,  pierres semi précieuses ,perles argent plaqué or, acier. Longueur 16 cm, chaîne d extension 5,5 cm</a></td><td class="cell-OWCF"><time>@10 novembre 2025 21:42</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a73c6d5-5b2b-80ee-862e-f9fa2876b761"><td class="cell-title"><a href="Agate%20et%20peridot%20-%2039%E2%82%AC%20-Les%20cr%C3%A9ations,%20bracelets%20d%202a73c6d55b2b80ee862ef9fa2876b761.html">Agate et peridot - 39€ -Les créations,  bracelets doubles rang,  pierres semi précieuses ,perles argent plaqué or, acier. Longueur 16 cm, chaîne d extension 5,5 cm</a></td><td class="cell-OWCF"><time>@10 novembre 2025 21:43</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a73c6d5-5b2b-8015-bafe-d235a5914f26"><td class="cell-title"><a href="Quartz%20et%20pierre%20de%20lune%20-%2039%E2%82%AC%20-%20Les%20cr%C3%A9ations,%20br%202a73c6d55b2b8015bafed235a5914f26.html">Quartz et pierre de lune - 39€ - Les créations,  bracelets doubles rang,  pierres semi précieuses ,perles argent plaqué or, acier. Longueur 16 cm, chaîne d extension 5,5 cm</a></td><td class="cell-OWCF"><time>@10 novembre 2025 21:43</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a73c6d5-5b2b-806c-a4bc-f6f858debd08"><td class="cell-title"><a href="Grenat%20et%20pierre%20de%20lune%20-%2039%E2%82%AC%20-%20Les%20cr%C3%A9ations,%20br%202a73c6d55b2b806ca4bcf6f858debd08.html">Grenat et pierre de lune - 39€ - Les créations,  bracelets doubles rang,  pierres semi précieuses ,perles argent plaqué or, acier. Longueur 16 cm, chaîne d extension 5,5 cm</a></td><td class="cell-OWCF"><time>@10 novembre 2025 21:44</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a73c6d5-5b2b-8024-a349-cba0b40a7361"><td class="cell-title"><a href="Tourmaline%20et%20aventurine%20-%2039%E2%82%AC%20-%20Les%20cr%C3%A9ations,%20br%202a73c6d55b2b8024a349cba0b40a7361.html">Tourmaline et aventurine - 39€ - Les créations,  bracelets doubles rang,  pierres semi précieuses ,perles argent plaqué or, acier. Longueur 16 cm, chaîne d extension 5,5 cm</a></td><td class="cell-OWCF"><time>@10 novembre 2025 21:45</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr><tr id="2a73c6d5-5b2b-8092-8e2a-fca48fce12a8"><td class="cell-title"><a href="Lapis%20lazuli%20-%2025%E2%82%AC%20-%20Les%20cr%C3%A9ations,%20bracelets%20doub%202a73c6d55b2b80928e2afca48fce12a8.html">Lapis lazuli - 25€ - Les créations,  bracelets doubles rang,  pierres semi précieuses ,perles argent plaqué or, acier. Longueur 16 cm, chaîne d extension 5,5 cm</a></td><td class="cell-OWCF"><time>@10 novembre 2025 21:16</time></td><td class="cell-}Utw"></td><td class="cell-Xlp`"></td></tr></tbody></table><br/><br/></div><p id="2a73c6d5-5b2b-802d-929e-e240e212ba30" class="">
+</p><p id="2a73c6d5-5b2b-80da-80b5-d5f1757d22f5" class="">
+</p></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

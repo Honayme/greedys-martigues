@@ -1371,6 +1371,15 @@ class Importer extends AbstractImporter
         foreach ($imageNames as $key => $image) {
             $path = 'import/'.$this->import->images_directory_path.'/'.$image;
 
+            // DEBUG LOG
+            \Log::info("Import image check", [
+                'sku' => $rowData['sku'],
+                'image' => $image,
+                'path' => $path,
+                'exists' => Storage::disk('local')->has($path),
+                'images_dir' => $this->import->images_directory_path,
+            ]);
+
             if (! Storage::disk('local')->has($path)) {
                 continue;
             }

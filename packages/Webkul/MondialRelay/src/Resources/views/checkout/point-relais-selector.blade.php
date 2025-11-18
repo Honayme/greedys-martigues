@@ -1,4 +1,10 @@
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
 @pushOnce('scripts')
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <script type="module">
         app.component('v-mondial-relay-selector', {
                 data() {
@@ -10,6 +16,9 @@
                         points: [],
                         selectedPoint: null,
                         error: null,
+                        map: null,
+                        markers: [],
+                        openedHorairesId: null, // ID du point dont les horaires sont ouverts
                     }
                 },
 
@@ -22,12 +31,24 @@
                         // Afficher le sélecteur pour Point Relais et Locker
                         if (method.includes('mondialrelay') &&
                             (method.includes('point_relais') || method.includes('locker'))) {
+
+                            const previousMethod = this.selectedMethod;
                             this.showSelector = true;
                             this.selectedMethod = method;
-                            this.loadPostcodeFromAddress();
+
+                            // Si on change de type (Locker ↔ Point Relais) et qu'on a déjà des résultats
+                            // → Relancer automatiquement la recherche
+                            if (previousMethod && previousMethod !== method && this.postcode && this.points.length > 0) {
+                                this.selectedPoint = null; // Réinitialiser la sélection
+                                this.searchPoints();
+                            } else {
+                                // Sinon, charger le code postal depuis l'adresse (comportement initial)
+                                this.loadPostcodeFromAddress();
+                            }
                         } else {
                             this.showSelector = false;
                             this.selectedPoint = null;
+                            this.points = [];
                         }
                     }
                 });
@@ -51,6 +72,7 @@
 
                     this.searching = true;
                     this.error = null;
+                    this.openedHorairesId = null; // Fermer les horaires ouverts lors d'une nouvelle recherche
 
                     this.$axios.get("{{ route('mondialrelay.search') }}", {
                             params: {
@@ -71,6 +93,9 @@
 
                                 if (this.points.length === 0) {
                                     this.error = 'Aucun point relais trouvé pour ce code postal';
+                                } else {
+                                    // Initialiser la carte après avoir chargé les points
+                                    this.initMap();
                                 }
                             } else {
                                 this.error = response.data.message || 'Erreur de recherche';
@@ -99,6 +124,94 @@
                             console.error('Erreur sauvegarde point relais', error);
                         });
                 },
+
+                initMap() {
+                    this.$nextTick(() => {
+                        if (this.map) {
+                            this.map.remove();
+                        }
+
+                        // Créer la carte centrée sur les points
+                        const centerLat = this.points.reduce((sum, p) => sum + parseFloat(p.latitude), 0) / this.points.length;
+                        const centerLng = this.points.reduce((sum, p) => sum + parseFloat(p.longitude), 0) / this.points.length;
+
+                        this.map = L.map('map-container').setView([centerLat, centerLng], 12);
+
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '© OpenStreetMap contributors'
+                        }).addTo(this.map);
+
+                        // Ajouter les marqueurs
+                        this.markers = [];
+                        this.points.forEach(point => {
+                            const isSelected = this.selectedPoint?.id === point.id;
+
+                            // Icône personnalisée selon sélection
+                            const icon = L.divIcon({
+                                className: 'custom-marker',
+                                html: `<div style="background: ${isSelected ? '#2563eb' : '#ef4444'}; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px;">${this.points.indexOf(point) + 1}</div>`,
+                                iconSize: [30, 30],
+                                iconAnchor: [15, 15]
+                            });
+
+                            const marker = L.marker([parseFloat(point.latitude), parseFloat(point.longitude)], { icon })
+                                .addTo(this.map)
+                                .bindPopup(`
+                                    <div style="min-width: 200px;">
+                                        <strong>${point.name}</strong><br>
+                                        ${point.address}<br>
+                                        ${point.postcode} ${point.city}
+                                    </div>
+                                `);
+
+                            // Cliquer sur un marqueur sélectionne le point
+                            marker.on('click', () => {
+                                this.selectPoint(point);
+                            });
+
+                            this.markers.push({ id: point.id, marker, icon });
+                        });
+                    });
+                },
+
+                selectPointAndFocusMap(point) {
+                    this.selectPoint(point);
+
+                    // Ouvrir automatiquement les horaires du point sélectionné
+                    this.openedHorairesId = point.id;
+
+                    // Centrer la carte sur ce point et ouvrir sa popup
+                    if (this.map && point.latitude && point.longitude) {
+                        this.map.setView([parseFloat(point.latitude), parseFloat(point.longitude)], 15);
+
+                        // Mettre à jour les icônes
+                        this.markers.forEach(m => {
+                            const isSelected = m.id === point.id;
+                            const pointIndex = this.points.findIndex(p => p.id === m.id);
+
+                            const newIcon = L.divIcon({
+                                className: 'custom-marker',
+                                html: `<div style="background: ${isSelected ? '#2563eb' : '#ef4444'}; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px;">${pointIndex + 1}</div>`,
+                                iconSize: [30, 30],
+                                iconAnchor: [15, 15]
+                            });
+
+                            m.marker.setIcon(newIcon);
+                            if (isSelected) {
+                                m.marker.openPopup();
+                            }
+                        });
+                    }
+                },
+
+                formatHoraires(horaires) {
+                    if (!horaires || Object.keys(horaires).length === 0) {
+                        return 'Horaires non disponibles';
+                    }
+                    return Object.entries(horaires)
+                        .map(([jour, horaire]) => `${jour}: ${horaire || 'Fermé'}`)
+                        .join('<br>');
+                },
             },
 
             template: `
@@ -118,7 +231,8 @@
                             <button
                                 @click="searchPoints"
                                 :disabled="searching"
-                                class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+                                style="background-color: #2563eb; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500; border: none; cursor: pointer;"
+                                :style="searching ? 'opacity: 0.5;' : ''"
                             >
                                 <span v-if="!searching">Rechercher</span>
                                 <span v-else>Recherche...</span>
@@ -127,32 +241,64 @@
                         <p v-if="error" class="mt-2 text-sm text-red-600">@{{ error }}</p>
                     </div>
 
-                    <!-- Liste des points -->
-                    <div v-if="points.length > 0" class="max-h-96 overflow-y-auto space-y-2">
-                        <div
-                            v-for="point in points"
-                            :key="point.id"
-                            @click="selectPoint(point)"
-                            class="p-3 border rounded-lg cursor-pointer transition"
-                            :class="selectedPoint?.id === point.id ? 'border-blue-600 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
-                        >
-                            <div class="flex items-start justify-between">
-                                <div class="flex-1">
-                                    <h4 class="font-semibold text-sm">@{{ point.name }}</h4>
-                                    <p class="text-xs text-gray-600 mt-1">
-                                        @{{ point.address }}<br>
-                                        @{{ point.postcode }} @{{ point.city }}
-                                    </p>
+                    <!-- Split View : Liste + Carte -->
+                    <div v-if="points.length > 0" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; height: 500px;">
+
+                        <!-- Liste des points (gauche) -->
+                        <div style="overflow-y: auto; padding-right: 0.5rem;">
+                            <div
+                                v-for="(point, index) in points"
+                                :key="point.id"
+                                @click="selectPointAndFocusMap(point)"
+                                class="p-3 mb-3 border rounded-lg cursor-pointer transition"
+                                :style="selectedPoint?.id === point.id ? 'border-color: #2563eb; background-color: #eff6ff; border-width: 2px;' : 'border-color: #e5e7eb;'"
+                            >
+                                <div class="flex items-start gap-3">
+                                    <!-- Numéro du point -->
+                                    <div :style="'background: ' + (selectedPoint?.id === point.id ? '#2563eb' : '#ef4444') + '; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; flex-shrink: 0;'">
+                                        @{{ index + 1 }}
+                                    </div>
+
+                                    <!-- Infos du point -->
+                                    <div class="flex-1">
+                                        <h4 class="font-semibold text-sm mb-1">@{{ point.name }}</h4>
+                                        <p class="text-xs text-gray-600 mb-2">
+                                            📍 @{{ point.address }}<br>
+                                            @{{ point.postcode }} @{{ point.city }}
+                                        </p>
+
+                                        <!-- Horaires avec toggle automatique -->
+                                        <div class="mt-1">
+                                            <div
+                                                @click.stop="openedHorairesId = openedHorairesId === point.id ? null : point.id"
+                                                class="text-xs text-blue-600 cursor-pointer hover:text-blue-700 select-none"
+                                            >
+                                                🕐 Horaires @{{ openedHorairesId === point.id ? '▼' : '▶' }}
+                                            </div>
+                                            <div
+                                                v-show="openedHorairesId === point.id"
+                                                class="mt-1 text-xs text-gray-600 pl-3 leading-relaxed"
+                                                v-html="formatHoraires(point.horaires)"
+                                            ></div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Checkmark -->
+                                    <span
+                                        v-if="selectedPoint?.id === point.id"
+                                        style="color: #2563eb; font-size: 1.5rem; flex-shrink: 0;"
+                                    >✓</span>
                                 </div>
-                                <span
-                                    v-if="selectedPoint?.id === point.id"
-                                    class="text-blue-600 text-xl"
-                                >✓</span>
                             </div>
+                        </div>
+
+                        <!-- Carte (droite) -->
+                        <div style="border-radius: 0.5rem; overflow: hidden; border: 1px solid #e5e7eb;">
+                            <div id="map-container" style="width: 100%; height: 100%;"></div>
                         </div>
                     </div>
 
-                    <p v-if="selectedPoint" class="mt-3 text-sm text-green-600">
+                    <p v-if="selectedPoint" class="mt-3 text-sm" style="color: #059669; font-weight: 500;">
                         ✓ Point relais sélectionné : <strong>@{{ selectedPoint.name }}</strong>
                     </p>
                 </div>

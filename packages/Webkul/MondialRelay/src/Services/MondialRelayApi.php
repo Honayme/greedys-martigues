@@ -184,8 +184,8 @@ class MondialRelayApi
                 'postcode'  => $point->CP ?? '',
                 'city'      => $point->Ville ?? '',
                 'country'   => $point->Pays ?? '',
-                'latitude'  => $point->Latitude ?? null,
-                'longitude' => $point->Longitude ?? null,
+                'latitude'  => $this->formatCoordinate($point->Latitude ?? null),
+                'longitude' => $this->formatCoordinate($point->Longitude ?? null),
                 'type'      => $isLocker ? '24L' : '24R',
                 'horaires'  => $this->parseHoraires($point),
             ];
@@ -202,14 +202,63 @@ class MondialRelayApi
         $jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
         $horaires = [];
 
-        foreach ($jours as $i => $jour) {
+        foreach ($jours as $jour) {
             $key = 'Horaires_'.$jour;
             if (isset($point->$key)) {
-                $horaires[$jour] = $point->$key;
+                $horaireObj = $point->$key;
+
+                // L'objet contient une propriété 'string' avec un array [début1, fin1, début2, fin2]
+                if (isset($horaireObj->string) && is_array($horaireObj->string)) {
+                    $times = $horaireObj->string;
+
+                    $plages = [];
+
+                    // Première plage (indices 0 et 1)
+                    if (! empty($times[0]) && ! empty($times[1])) {
+                        $plages[] = $this->formatTime($times[0]).' - '.$this->formatTime($times[1]);
+                    }
+
+                    // Deuxième plage (indices 2 et 3)
+                    if (! empty($times[2]) && ! empty($times[3])) {
+                        $plages[] = $this->formatTime($times[2]).' - '.$this->formatTime($times[3]);
+                    }
+
+                    $horaires[$jour] = ! empty($plages) ? implode(' / ', $plages) : 'Fermé';
+                } else {
+                    $horaires[$jour] = 'Non disponible';
+                }
             }
         }
 
         return $horaires;
+    }
+
+    /**
+     * Formate un horaire de HHMM vers HH:MM
+     */
+    private function formatTime(string $time): string
+    {
+        // "0900" -> "09:00"
+        if (strlen($time) === 4) {
+            return substr($time, 0, 2).':'.substr($time, 2, 2);
+        }
+
+        return $time;
+    }
+
+    /**
+     * Formate une coordonnée GPS (virgule française vers point décimal)
+     */
+    private function formatCoordinate($coordinate): ?float
+    {
+        if ($coordinate === null || $coordinate === '') {
+            return null;
+        }
+
+        // Remplacer virgule par point (format français vers format international)
+        $coord = str_replace(',', '.', (string) $coordinate);
+
+        return (float) $coord;
     }
 
     /**

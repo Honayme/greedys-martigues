@@ -1,0 +1,21 @@
+{
+    "name": "webkul/mondialrelay",
+    "description": "Mondial Relay shipping integration for Bagisto",
+    "type": "library",
+    "require": {
+        "php": "^8.1",
+        "ext-soap": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Webkul\\MondialRelay\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Webkul\\MondialRelay\\Providers\\MondialRelayServiceProvider"
+            ]
+        }
+    }
+}

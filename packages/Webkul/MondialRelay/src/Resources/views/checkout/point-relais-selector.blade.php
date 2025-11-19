@@ -1,6 +1,73 @@
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
+<style>
+    .mondial-relay-container {
+        max-width: 100%;
+        overflow-x: hidden;
+        box-sizing: border-box;
+    }
+
+    .mondial-relay-search {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .mondial-relay-search input {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    .mondial-relay-search button {
+        flex-shrink: 0;
+        white-space: nowrap;
+    }
+
+    .mondial-relay-split-view {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        height: 500px;
+    }
+
+    /* Responsive sur mobile */
+    @media (max-width: 768px) {
+        .mondial-relay-split-view {
+            grid-template-columns: 1fr;
+            height: auto;
+        }
+
+        .mondial-relay-split-view > div:first-child {
+            max-height: 400px;
+        }
+
+        .mondial-relay-split-view > div:last-child {
+            height: 300px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .mondial-relay-search {
+            gap: 0.25rem;
+        }
+
+        .mondial-relay-search input,
+        .mondial-relay-search button {
+            padding: 0.5rem 0.75rem;
+            font-size: 14px;
+        }
+
+        .mondial-relay-split-view > div:first-child {
+            max-height: 350px;
+        }
+
+        .mondial-relay-split-view > div:last-child {
+            height: 250px;
+        }
+    }
+</style>
+
 @pushOnce('scripts')
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -215,17 +282,17 @@
             },
 
             template: `
-                <div v-show="showSelector" class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div v-show="showSelector" class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200 mondial-relay-container">
                     <h3 class="text-lg font-semibold mb-3">Sélectionnez votre point relais</h3>
 
                     <!-- Recherche -->
                     <div class="mb-4">
-                        <div class="flex gap-2">
+                        <div class="mondial-relay-search">
                             <input
                                 type="text"
                                 v-model="postcode"
                                 placeholder="Code postal"
-                                class="flex-1 px-3 py-2 border border-gray-300 rounded-md"
+                                class="px-3 py-2 border border-gray-300 rounded-md"
                                 @keyup.enter="searchPoints"
                             />
                             <button
@@ -235,17 +302,17 @@
                                 :style="searching ? 'opacity: 0.5;' : ''"
                             >
                                 <span v-if="!searching">Rechercher</span>
-                                <span v-else>Recherche...</span>
+                                <span v-else>Rechercher...</span>
                             </button>
                         </div>
                         <p v-if="error" class="mt-2 text-sm text-red-600">@{{ error }}</p>
                     </div>
 
                     <!-- Split View : Liste + Carte -->
-                    <div v-if="points.length > 0" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; height: 500px;">
+                    <div v-if="points.length > 0" class="mondial-relay-split-view">
 
                         <!-- Liste des points (gauche) -->
-                        <div style="overflow-y: auto; padding-right: 0.5rem;">
+                        <div style="overflow-y: auto; padding-right: 0.5rem; min-width: 0;">
                             <div
                                 v-for="(point, index) in points"
                                 :key="point.id"

@@ -743,7 +743,7 @@ return [
                 'continue-to-checkout' => 'Continuer la commande',
                 'empty-cart'           => 'Votre panier est vide',
                 'excl-tax'             => 'Hors taxes :',
-                'offer-on-orders'      => 'Bénéficiez de jusqu\'à 30% de réduction sur votre 1ère commande',
+                'offer-on-orders'      => 'Bénéficiez de jusqu\'à 10% de réduction sur votre 1ère commande avec le code BIENVENU10',
                 'remove'               => 'Supprimer',
                 'see-details'          => 'Voir les détails',
                 'shopping-cart'        => 'Panier d\'achat',

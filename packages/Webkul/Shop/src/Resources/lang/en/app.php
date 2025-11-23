@@ -742,7 +742,7 @@ return [
                 'continue-to-checkout' => 'Continue to Checkout',
                 'empty-cart'           => 'Your cart is empty',
                 'excl-tax'             => 'Excl. Tax:',
-                'offer-on-orders'      => 'Obtenez 10% sur votre première commande avec le code BIENVENU10',
+                'offer-on-orders'      => 'Get Up To 30% OFF on your 1st order',
                 'remove'               => 'Remove',
                 'see-details'          => 'See Details',
                 'shopping-cart'        => 'Shopping Cart',

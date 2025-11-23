@@ -28,22 +28,35 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1rem;
-        height: 500px;
+        min-height: 500px;
+    }
+
+    .mondial-relay-map-wrapper {
+        min-height: 500px;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+    }
+
+    #map-container {
+        width: 100%;
+        min-height: 500px;
     }
 
     /* Responsive sur mobile */
     @media (max-width: 768px) {
         .mondial-relay-split-view {
             grid-template-columns: 1fr;
-            height: auto;
+            min-height: auto;
         }
 
         .mondial-relay-split-view > div:first-child {
             max-height: 400px;
         }
 
-        .mondial-relay-split-view > div:last-child {
-            height: 300px;
+        .mondial-relay-map-wrapper,
+        #map-container {
+            min-height: 300px;
         }
     }
 
@@ -62,8 +75,9 @@
             max-height: 350px;
         }
 
-        .mondial-relay-split-view > div:last-child {
-            height: 250px;
+        .mondial-relay-map-wrapper,
+        #map-container {
+            min-height: 250px;
         }
     }
 </style>
@@ -193,7 +207,14 @@
                 },
 
                 initMap() {
+                    console.log('initMap() appelé, points:', this.points.length);
+                    console.log('Leaflet disponible:', typeof L !== 'undefined');
+
                     this.$nextTick(() => {
+                        const container = document.getElementById('map-container');
+                        console.log('map-container trouvé:', !!container);
+                        console.log('map-container dimensions:', container?.offsetWidth, container?.offsetHeight);
+
                         if (this.map) {
                             this.map.remove();
                         }
@@ -202,7 +223,14 @@
                         const centerLat = this.points.reduce((sum, p) => sum + parseFloat(p.latitude), 0) / this.points.length;
                         const centerLng = this.points.reduce((sum, p) => sum + parseFloat(p.longitude), 0) / this.points.length;
 
-                        this.map = L.map('map-container').setView([centerLat, centerLng], 12);
+                        console.log('Centre carte:', centerLat, centerLng);
+
+                        try {
+                            this.map = L.map('map-container').setView([centerLat, centerLng], 12);
+                            console.log('Carte créée avec succès');
+                        } catch (e) {
+                            console.error('Erreur création carte:', e);
+                        }
 
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                             attribution: '© OpenStreetMap contributors'
@@ -298,7 +326,7 @@
                             <button
                                 @click="searchPoints"
                                 :disabled="searching"
-                                style="background-color: #2563eb; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500; border: none; cursor: pointer;"
+                                style="background-color: #2563eb; margin-left: 30px; color: white; padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500; border: none; cursor: pointer;"
                                 :style="searching ? 'opacity: 0.5;' : ''"
                             >
                                 <span v-if="!searching">Rechercher</span>
@@ -309,10 +337,10 @@
                     </div>
 
                     <!-- Split View : Liste + Carte -->
-                    <div v-if="points.length > 0" class="mondial-relay-split-view">
+                    <div v-if="points.length > 0" class="mondial-relay-split-view" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; height: 500px;">
 
                         <!-- Liste des points (gauche) -->
-                        <div style="overflow-y: auto; padding-right: 0.5rem; min-width: 0;">
+                        <div style="overflow-y: auto; padding-right: 0.5rem; min-width: 0; max-height: 500px;">
                             <div
                                 v-for="(point, index) in points"
                                 :key="point.id"
@@ -360,7 +388,7 @@
                         </div>
 
                         <!-- Carte (droite) -->
-                        <div style="border-radius: 0.5rem; overflow: hidden; border: 1px solid #e5e7eb;">
+                        <div class="mondial-relay-map-wrapper" style="min-height: 500px; height: 500px; border-radius: 0.5rem; overflow: hidden; border: 1px solid #e5e7eb;">
                             <div id="map-container" style="width: 100%; height: 100%;"></div>
                         </div>
                     </div>

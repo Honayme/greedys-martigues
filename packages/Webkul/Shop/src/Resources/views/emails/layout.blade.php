@@ -79,9 +79,7 @@
                     <!-- Header -->
                     <div class="email-header" style="background-color: #F1C09C; color: #ffffff; padding: 30px 40px; text-align: center;">
                         <a href="{{ config('app.url') }}" target="_blank" style="text-decoration: none; display: block; margin: 0 auto; max-width: 180px;">
-                            <?xml version="1.0" standalone="no"?>
-                            <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
-                            <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+                            <svg xmlns="http://www.w3.org/2000/svg"
                                  width="100%" height="auto" viewBox="0 0 686 1037"
                                  preserveAspectRatio="xMidYMid meet" style="display:block; max-width:180px; height:auto; margin:0 auto;">
                                 <g transform="translate(0.000000,1037.000000) scale(0.100000,-0.100000)"

@@ -36,7 +36,7 @@ return [
             'footer'              => '© Droits d’auteur :current_year, Greedys Création. Tous droits réservés.',
             'forgot-pass'         => 'Mot de passe oublié ?',
             'form-login-text'     => 'Si vous avez un compte, connectez-vous avec votre adresse e-mail.',
-            'invalid-credentials' => "Veuillez vérifier vos informations d'identification et réessayer.",
+            'invalid-credentials' => 'Veuillez vérifier vos informations de connexion et réessayer.',
             'new-customer'        => 'Nouveau client ?',
             'not-activated'       => "Votre activation nécessite l'approbation de l'administrateur",
             'page-title'          => 'Connexion client',

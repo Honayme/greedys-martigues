@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Storage;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -10,3 +12,13 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/sitemap.xml', function () {
+    $path = Storage::disk('public')->path('sitemap.xml');
+
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    return response()->file($path, ['Content-Type' => 'text/xml']);
+});

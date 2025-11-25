@@ -60,7 +60,6 @@
 
                         <div class="fixed inset-0 overflow-hidden pointer-events-none">
                             <div class="absolute inset-0 overflow-hidden">
-
                                 <div class="fixed inset-y-0 right-0 flex max-w-full pl-10 pt-0">
 
                                     <transition name="slide" appear>
@@ -71,7 +70,7 @@
                                             <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-2xl">
 
                                                 <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
-                                                    <h2 class="text-xl font-bold uppercase tracking-wide text-gray-900" id="slide-over-title">
+                                                    <h2 class="text-xl font-bold uppercase tracking-wide text-gray-900">
                                                         FILTRES
                                                     </h2>
                                                     <button
@@ -100,43 +99,86 @@
                     </div>
                 </teleport>
 
-                <div class="flex-1">
-                    <div class="max-md:hidden">
-                        @include('shop::categories.toolbar')
-                    </div>
+                <div class="flex items-start gap-10 max-lg:gap-5 md:mt-10">
+                    <div class="flex-1">
+                        <div class="max-md:hidden">
+                            @include('shop::categories.toolbar')
+                        </div>
 
-                    <div class="mt-8">
-                        <template v-if="isLoading">
-                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                                <x-shop::shimmer.products.cards.grid count="12"/>
-                            </div>
-                        </template>
+                        <div
+                            class="mt-8 grid grid-cols-1 gap-6"
+                            v-if="filters.toolbar.mode === 'list'"
+                        >
+                            <template v-if="isLoading">
+                                <x-shop::shimmer.products.cards.list count="12" />
+                            </template>
 
-                        <template v-else>
-                            <template v-if="products.length">
-                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                            <template v-else>
+                                <template v-if="products.length">
                                     <x-shop::products.card
-                                        ::mode="'grid'"
+                                        ::mode="'list'"
                                         v-for="product in products"
-                                        :navigation-link="route('shop.search.index')"
                                     />
+                                </template>
+
+                                <template v-else>
+                                    <div class="m-auto grid w-full place-content-center items-center justify-items-center py-32 text-center">
+                                        <img
+                                            class="max-sm:h-[100px] max-sm:w-[100px]"
+                                            src="{{ bagisto_asset('images/thank-you.png') }}"
+                                            alt="Empty result"
+                                        />
+
+                                        <p class="text-xl max-sm:text-sm" role="heading">
+                                            @lang('shop::app.categories.view.empty')
+                                        </p>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+
+                        <div v-else>
+                            <template v-if="isLoading">
+                                <div class="mt-8 grid grid-cols-3 gap-8 max-1060:grid-cols-2 max-md:gap-x-4 max-sm:mt-5 max-sm:justify-items-center max-sm:gap-y-5">
+                                    <x-shop::shimmer.products.cards.grid count="12" />
                                 </div>
                             </template>
 
                             <template v-else>
-                                <div class="m-auto grid w-full place-content-center items-center justify-items-center py-32 text-center">
-                                    <img class="max-sm:h-[100px] max-sm:w-[100px]" src="{{ bagisto_asset('images/thank-you.png') }}" alt="Empty"/>
-                                    <p class="text-xl max-sm:text-sm">@lang('shop::app.categories.view.empty')</p>
-                                </div>
-                            </template>
-                        </template>
-                    </div>
+                                <template v-if="products.length">
+                                    <div class="mt-8 grid grid-cols-3 gap-8 max-1060:grid-cols-2 max-md:mt-5 max-md:justify-items-center max-md:gap-x-4 max-md:gap-y-5">
+                                        <x-shop::products.card
+                                            ::mode="'grid'"
+                                            v-for="product in products"
+                                            :navigation-link="route('shop.search.index')"
+                                        />
+                                    </div>
+                                </template>
 
-                    <button
-                        class="secondary-button mx-auto mt-[60px] block w-max rounded-2xl px-11 py-3 text-center text-base"
-                        @click="loadMoreProducts" v-if="links.next">
-                        @lang('shop::app.categories.view.load-more')
-                    </button>
+                                <template v-else>
+                                    <div class="m-auto grid w-full place-content-center items-center justify-items-center py-32 text-center">
+                                        <img
+                                            class="max-sm:h-[100px] max-sm:w-[100px]"
+                                            src="{{ bagisto_asset('images/thank-you.png') }}"
+                                            alt="Empty result"
+                                        />
+
+                                        <p class="text-xl max-sm:text-sm" role="heading">
+                                            @lang('shop::app.categories.view.empty')
+                                        </p>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+
+                        <button
+                            class="secondary-button mx-auto mt-[60px] block w-max rounded-2xl px-11 py-3 text-center text-base max-md:rounded-lg max-md:text-sm max-sm:mt-7 max-sm:px-7 max-sm:py-2"
+                            @click="loadMoreProducts"
+                            v-if="links.next"
+                        >
+                            @lang('shop::app.categories.view.load-more')
+                        </button>
+                    </div>
                 </div>
             </div>
         </script>
@@ -151,7 +193,7 @@
                         isLoading: true,
                         isDrawerActive: {
                             toolbar: false,
-                            filter: false, // État de la sidebar
+                            filter: false,
                         },
                         filters: {
                             toolbar: {},
@@ -191,7 +233,6 @@
                     },
 
                     getProducts() {
-                        // Logique pour garder la sidebar ouverte
                         this.isDrawerActive.toolbar = false;
 
                         this.$axios.get(("{{ route('shop.api.products.index') }}"), {
@@ -277,6 +318,4 @@
             }
         </style>
     @endPushOnce
-
-
 </x-shop::layouts>

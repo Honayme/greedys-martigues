@@ -66,19 +66,6 @@
             id="v-category-template"
         >
             <div class="container px-[60px] max-lg:px-8 max-md:px-4">
-                <!-- Bouton Filtrer -->
-                <div class="flex justify-end mb-4">
-                    <button
-                        @click="isDrawerActive.filter = true"
-                        class="inline-flex items-center justify-center h-10 px-4 py-2 text-sm font-medium transition-colors bg-white border rounded-md hover:bg-neutral-100 active:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-200/60 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none"
-                    >
-                        <span class="mr-2">Filtrer</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 00-3 0m0 0H3.75m6.75 0a1.5 1.5 0 003 0m3.75 6h9.75m-9.75 0a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 00-3 0m0 0H3.75m6.75 0a1.5 1.5 0 003 0m-3.75 6h9.75m-9.75 0a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 00-3 0m0 0H3.75m6.75 0a1.5 1.5 0 003 0" />
-                        </svg>
-                    </button>
-                </div>
-
                 <!-- Slide Over -->
                 <div v-show="isDrawerActive.filter" class="relative z-[99]">
                     <!-- Overlay -->

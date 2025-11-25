@@ -35,18 +35,6 @@
     @pushOnce('scripts')
         <script type="text/x-template" id="v-search-template">
             <div class="container px-[60px] max-lg:px-8 max-sm:px-4">
-
-                <div class="flex justify-end mb-4">
-                    <button
-                        @click="isDrawerActive.filter = true"
-                        class="inline-flex justify-center items-center px-4 py-2 h-10 text-sm font-medium bg-white rounded-md border transition-colors hover:bg-neutral-100 active:bg-white focus:bg-white focus:outline-none focus:ring-2 focus:ring-neutral-200/60 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none">
-                        <span>Filtrer</span>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 ml-2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 00-3 0m0 0H3.75m6.75 0a1.5 1.5 0 003 0m3.75 6h9.75m-9.75 0a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 00-3 0m0 0H3.75m6.75 0a1.5 1.5 0 003 0m-3.75 6h9.75m-9.75 0a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 00-3 0m0 0H3.75m6.75 0a1.5 1.5 0 003 0"/>
-                        </svg>
-                    </button>
-                </div>
-
                 <teleport to="body">
                     <div v-if="isDrawerActive.filter" class="relative z-[1001]">
 

@@ -1,12 +1,12 @@
 <!-- SEO Meta Content -->
 @push('meta')
-    <meta 
-        name="description" 
+    <meta
+        name="description"
         content="{{ trim($category->meta_description) != "" ? $category->meta_description : \Illuminate\Support\Str::limit(strip_tags($category->description), 120, '') }}"
     />
 
-    <meta 
-        name="keywords" 
+    <meta
+        name="keywords"
         content="{{ $category->meta_keywords }}"
     />
 
@@ -49,7 +49,7 @@
             </div>
         @endif
     @endif
-        
+
     {!! view_render_event('bagisto.shop.categories.view.description.after') !!}
 
     @if (in_array($category->display_mode, [null, 'products_only', 'products_and_description']))
@@ -61,66 +61,65 @@
     @endif
 
     @pushOnce('scripts')
-        <script 
-            type="text/x-template" 
+        <script
+            type="text/x-template"
             id="v-category-template"
         >
-            <div class="container px-[60px] max-lg:px-8 max-md:px-4">
-                <!-- Slide Over -->
-                <div v-show="isDrawerActive.filter" class="relative z-[99]">
-                    <!-- Overlay -->
-                    <transition name="fade">
-                        <div
-                            v-show="isDrawerActive.filter"
-                            @click="isDrawerActive.filter = false"
-                            class="fixed inset-0 bg-black/20 backdrop-blur-sm"
-                        ></div>
-                    </transition>
+            <div class="container px-[60px] max-lg:px-8 max-sm:px-4">
+                <teleport to="body">
+                    <div v-if="isDrawerActive.filter" class="relative z-[1001]">
 
-                    <!-- Slide Over Panel -->
-                    <div class="fixed inset-0 overflow-hidden pointer-events-none">
-                        <div class="absolute inset-0 overflow-hidden">
-                            <div class="fixed inset-y-0 right-0 flex max-w-full pl-10">
-                                <transition name="slide">
-                                    <div
-                                        v-show="isDrawerActive.filter"
-                                        class="pointer-events-auto w-screen max-w-md"
-                                    >
-                                        <div class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
-                                            <!-- Header -->
-                                            <div class="px-4 sm:px-6">
-                                                <div class="flex items-start justify-between">
-                                                    <h2 class="text-lg font-medium text-gray-900">Filtres</h2>
-                                                    <div class="ml-3 flex h-7 items-center">
-                                                        <button
-                                                            @click="isDrawerActive.filter = false"
-                                                            type="button"
-                                                            class="relative -m-2 p-2 text-gray-400 hover:text-gray-500"
-                                                        >
-                                                            <span class="absolute -inset-0.5"></span>
-                                                            <span class="sr-only">Fermer</span>
-                                                            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                                                            </svg>
-                                                        </button>
+                        <transition name="fade" appear>
+                            <div
+                                v-show="isDrawerActive.filter"
+                                @click="isDrawerActive.filter = false"
+                                class="fixed inset-0 custom-overlay backdrop-blur-sm"
+                            ></div>
+                        </transition>
+
+                        <div class="fixed inset-0 overflow-hidden pointer-events-none">
+                            <div class="absolute inset-0 overflow-hidden">
+                                <div class="fixed inset-y-0 right-0 flex max-w-full pl-10 pt-0">
+
+                                    <transition name="slide" appear>
+                                        <div
+                                            v-show="isDrawerActive.filter"
+                                            class="pointer-events-auto w-screen max-w-[400px]"
+                                        >
+                                            <div class="flex h-full flex-col overflow-y-scroll bg-white shadow-2xl">
+
+                                                <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+                                                    <h2 class="text-xl font-bold uppercase tracking-wide text-gray-900">
+                                                        FILTRES
+                                                    </h2>
+                                                    <button
+                                                        @click="isDrawerActive.filter = false"
+                                                        type="button"
+                                                        class="rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
+                                                    >
+                                                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+
+                                                <div class="relative mt-6 flex-1 px-6">
+                                                    <div id="bagisto-filters-wrapper">
+                                                        @include('shop::categories.filters')
                                                     </div>
                                                 </div>
-                                            </div>
 
-                                            <!-- Content -->
-                                            <div class="relative mt-6 flex-1 px-4 sm:px-6">
-                                                @include('shop::categories.filters')
                                             </div>
                                         </div>
-                                    </div>
-                                </transition>
+                                    </transition>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                </teleport>
 
-                <!-- Product Listing Container -->
-                <div class="flex-1">
+                <div class="flex items-start gap-10 max-lg:gap-5 md:mt-10">
+                    <div class="flex-1">
                         <!-- Desktop Product Listing Toolbar -->
                         <div class="max-md:hidden">
                             @include('shop::categories.toolbar')
@@ -155,7 +154,7 @@
                                             src="{{ bagisto_asset('images/thank-you.png') }}"
                                             alt="@lang('shop::app.categories.view.empty')"
                                         />
-                                  
+
                                         <p
                                             class="text-xl max-md:text-sm"
                                             role="heading"
@@ -199,7 +198,7 @@
                                             src="{{ bagisto_asset('images/thank-you.png') }}"
                                             alt="@lang('shop::app.categories.view.empty')"
                                         />
-                                        
+
                                         <p
                                             class="text-xl max-md:text-sm"
                                             role="heading"
@@ -254,13 +253,13 @@
 
                         isDrawerActive: {
                             toolbar: false,
-                            
+
                             filter: false,
                         },
 
                         filters: {
                             toolbar: {},
-                            
+
                             filter: {},
                         },
 
@@ -304,22 +303,14 @@
                     },
 
                     getProducts() {
-                        this.isDrawerActive = {
-                            toolbar: false,
-                            
-                            filter: false,
-                        };
-
-                        document.body.style.overflow ='scroll';
+                        this.isDrawerActive.toolbar = false;
 
                         this.$axios.get("{{ route('shop.api.products.index', ['category_id' => $category->id]) }}", {
-                            params: this.queryParams 
+                            params: this.queryParams
                         })
                             .then(response => {
                                 this.isLoading = false;
-
                                 this.products = response.data.data;
-
                                 this.links = response.data.links;
                             }).catch(error => {
                                 console.log(error);
@@ -373,25 +364,37 @@
         </script>
 
         <style>
-            /* Transitions pour le Slide Over Vue.js */
-            .fade-enter-active, .fade-leave-active {
-                transition: opacity 0.3s;
-            }
-            .fade-enter-from, .fade-leave-to {
-                opacity: 0;
+            /* 1. Force Black Overlay */
+            .custom-overlay {
+                background-color: rgba(0, 0, 0, 0.5) !important;
             }
 
-            .slide-enter-active {
-                transition: transform 0.5s ease-in-out;
+            /* 2. Fade Transition (Overlay) */
+            .fade-enter-active,
+            .fade-leave-active {
+                transition: opacity 0.5s ease-in-out;
             }
+            .fade-enter-from,
+            .fade-leave-to {
+                opacity: 0;
+            }
+            .fade-enter-to,
+            .fade-leave-from {
+                opacity: 1;
+            }
+
+            /* 3. Slide Transition (Sidebar) */
+            .slide-enter-active,
             .slide-leave-active {
                 transition: transform 0.5s ease-in-out;
             }
-            .slide-enter-from {
-                transform: translateX(100%);
-            }
+            .slide-enter-from,
             .slide-leave-to {
                 transform: translateX(100%);
+            }
+            .slide-enter-to,
+            .slide-leave-from {
+                transform: translateX(0);
             }
         </style>
     @endPushOnce

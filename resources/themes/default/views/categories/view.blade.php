@@ -214,26 +214,18 @@
 
                         {!! view_render_event('bagisto.shop.categories.view.load_more_button.before') !!}
 
-                        <!-- Load More Button -->
-                        <button
-                            class="secondary-button mx-auto mt-14 block w-max rounded-2xl px-11 py-3 text-center text-base max-md:rounded-lg max-sm:mt-6 max-sm:px-6 max-sm:py-1.5 max-sm:text-sm"
-                            @click="loadMoreProducts"
-                            v-if="links.next && ! loader"
-                        >
-                            @lang('shop::app.categories.view.load-more')
-                        </button>
-
-                        <button
-                            v-else-if="links.next"
-                            class="secondary-button mx-auto mt-14 block w-max rounded-2xl px-[74.5px] py-3.5 text-center text-base max-md:rounded-lg max-md:py-3 max-sm:mt-6 max-sm:px-[50.8px] max-sm:py-1.5"
-                        >
-                            <!-- Spinner -->
-                            <img
-                                class="h-5 w-5 animate-spin text-navyBlue"
-                                src="{{ bagisto_asset('images/spinner.svg') }}"
-                                alt="Loading"
-                            />
-                        </button>
+                        <!-- Infinite Scroll Trigger & Loading Indicator -->
+                        <div v-if="links.next" class="mt-14 flex justify-center">
+                            <div v-if="loader" class="flex items-center gap-3">
+                                <img
+                                    class="h-5 w-5 animate-spin"
+                                    src="{{ bagisto_asset('images/spinner.svg') }}"
+                                    alt="Loading"
+                                />
+                                <span class="text-sm text-gray-600">@lang('shop::app.categories.view.load-more')</span>
+                            </div>
+                            <div ref="loadMoreTrigger" class="h-1"></div>
+                        </div>
 
                         {!! view_render_event('bagisto.shop.categories.view.grid.load_more_button.after') !!}
                     </div>
@@ -268,6 +260,8 @@
                         links: {},
 
                         loader: false,
+
+                        intersectionObserver: null,
                     }
                 },
 
@@ -291,6 +285,20 @@
                     queryString() {
                         window.history.pushState({}, '', '?' + this.queryString);
                     },
+
+                    links() {
+                        this.observeLoadMoreTrigger();
+                    },
+                },
+
+                mounted() {
+                    this.observeLoadMoreTrigger();
+                },
+
+                beforeUnmount() {
+                    if (this.intersectionObserver) {
+                        this.intersectionObserver.disconnect();
+                    }
                 },
 
                 methods: {
@@ -334,6 +342,37 @@
                             }).catch(error => {
                                 console.log(error);
                             });
+                    },
+
+                    observeLoadMoreTrigger() {
+                        this.$nextTick(() => {
+                            const trigger = this.$refs.loadMoreTrigger;
+
+                            if (!trigger || !this.links.next) {
+                                return;
+                            }
+
+                            this.intersectionObserver = new IntersectionObserver(
+                                (entries) => {
+                                    entries.forEach((entry) => {
+                                        if (entry.isIntersecting && this.links.next && !this.loader) {
+                                            this.loadMoreProducts();
+                                        }
+                                    });
+                                },
+                                { threshold: 0.1 }
+                            );
+
+                            this.intersectionObserver.observe(trigger);
+                        });
+                    },
+
+                    resetObserver() {
+                        if (this.intersectionObserver) {
+                            this.intersectionObserver.disconnect();
+                        }
+
+                        this.observeLoadMoreTrigger();
                     },
 
                     removeJsonEmptyValues(params) {

@@ -159,13 +159,18 @@
                             </template>
                         </div>
 
-                        <button
-                            class="secondary-button mx-auto mt-[60px] block w-max rounded-2xl px-11 py-3 text-center text-base max-md:rounded-lg max-md:text-sm max-sm:mt-7 max-sm:px-7 max-sm:py-2"
-                            @click="loadMoreProducts"
-                            v-if="links.next"
-                        >
-                            @lang('shop::app.categories.view.load-more')
-                        </button>
+                        <!-- Infinite Scroll Trigger & Loading Indicator -->
+                        <div v-if="links.next" class="mt-14 flex justify-center">
+                            <div v-if="loader" class="flex items-center gap-3">
+                                <img
+                                    class="h-5 w-5 animate-spin"
+                                    src="{{ bagisto_asset('images/spinner.svg') }}"
+                                    alt="Loading"
+                                />
+                                <span class="text-sm text-gray-600">@lang('shop::app.categories.view.load-more')</span>
+                            </div>
+                            <div ref="loadMoreTrigger" class="h-1"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -189,6 +194,8 @@
                         },
                         products: [],
                         links: {},
+                        loader: false,
+                        intersectionObserver: null,
                     }
                 },
 
@@ -209,6 +216,19 @@
                     queryString() {
                         window.history.pushState({}, '', '?' + this.queryString);
                     },
+                    links() {
+                        this.observeLoadMoreTrigger();
+                    },
+                },
+
+                mounted() {
+                    this.observeLoadMoreTrigger();
+                },
+
+                beforeUnmount() {
+                    if (this.intersectionObserver) {
+                        this.intersectionObserver.disconnect();
+                    }
                 },
 
                 methods: {
@@ -236,14 +256,54 @@
                     },
 
                     loadMoreProducts() {
-                        if (this.links.next) {
-                            this.$axios.get(this.links.next).then(response => {
+                        if (! this.links.next) {
+                            return;
+                        }
+
+                        this.loader = true;
+
+                        this.$axios.get(this.links.next)
+                            .then(response => {
+                                this.loader = false;
+
                                 this.products = [...this.products, ...response.data.data];
+
                                 this.links = response.data.links;
                             }).catch(error => {
                                 console.log(error);
+                                this.loader = false;
                             });
+                    },
+
+                    observeLoadMoreTrigger() {
+                        this.$nextTick(() => {
+                            const trigger = this.$refs.loadMoreTrigger;
+
+                            if (!trigger || !this.links.next) {
+                                return;
+                            }
+
+                            this.intersectionObserver = new IntersectionObserver(
+                                (entries) => {
+                                    entries.forEach((entry) => {
+                                        if (entry.isIntersecting && this.links.next && !this.loader) {
+                                            this.loadMoreProducts();
+                                        }
+                                    });
+                                },
+                                { threshold: 0.1 }
+                            );
+
+                            this.intersectionObserver.observe(trigger);
+                        });
+                    },
+
+                    resetObserver() {
+                        if (this.intersectionObserver) {
+                            this.intersectionObserver.disconnect();
                         }
+
+                        this.observeLoadMoreTrigger();
                     },
 
                     removeJsonEmptyValues(params) {

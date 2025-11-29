@@ -287,7 +287,7 @@ class MondialRelayApi
             'Expe_Ville'   => substr($this->cleanString($orderData['sender']['city']), 0, 26),
             'Expe_CP'      => $orderData['sender']['postcode'],
             'Expe_Pays'    => $orderData['sender']['country'],
-            'Expe_Tel1'    => $this->cleanPhone(!empty($orderData['sender']['phone']) ? $orderData['sender']['phone'] : '0760088934'),
+            'Expe_Tel1'    => $this->cleanPhone(! empty($orderData['sender']['phone']) ? $orderData['sender']['phone'] : '0760088934'),
             'Expe_Tel2'    => '',
             'Expe_Mail'    => $orderData['sender']['email'],
             'Dest_Langage' => 'FR',
@@ -307,7 +307,7 @@ class MondialRelayApi
             'NbColis'      => '1',
             'CRT_Valeur'   => '0', // Pas de contre-remboursement (commande déjà payée)
             'CRT_Devise'   => 'EUR',
-            'Exp_Valeur'   => (string) round($orderData['amount'], 2),
+            'Exp_Valeur'   => (string) round($orderData['amount'] * 100),
             'Exp_Devise'   => 'EUR',
             'COL_Rel_Pays' => '',
             'COL_Rel'      => '',

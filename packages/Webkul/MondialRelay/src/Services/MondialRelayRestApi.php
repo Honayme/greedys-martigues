@@ -22,6 +22,17 @@ class MondialRelayRestApi
         $this->login = core()->getConfigData('sales.carriers.mondialrelay.api_v2_login') ?? '';
         $this->password = core()->getConfigData('sales.carriers.mondialrelay.api_v2_password') ?? '';
         $this->brandId = core()->getConfigData('sales.carriers.mondialrelay.api_v2_brand_id') ?? '';
+
+        // Validation URL configurée
+        if (empty($this->apiUrl)) {
+            throw new \Exception('URL API V2 Mondial Relay non configurée');
+        }
+
+        // Validation format CustomerId (Brand ID) : ^[0-9A-Z]{2}[0-9A-Z]{6}$
+        // 8 caractères alphanumériques majuscules (2 premiers + 6 suivants)
+        if (!empty($this->brandId) && !preg_match('/^[0-9A-Z]{2}[0-9A-Z]{6}$/', $this->brandId)) {
+            throw new \Exception('CustomerId (Brand ID) invalide : doit être 8 caractères alphanumériques majuscules (ex: CC23JOIN)');
+        }
     }
 
     /**
@@ -55,15 +66,15 @@ class MondialRelayRestApi
             'xml'     => $xml,
             'headers' => [
                 'Accept'       => 'application/xml',
-                'Content-Type' => 'text/xml; charset=utf-8',
+                'Content-Type' => 'text/xml',
             ],
         ]);
 
-        // Appel API
+        // Appel API - Headers strictement conformes à la doc (ligne 291-293)
         try {
             $response = Http::withHeaders([
                 'Accept'       => 'application/xml',
-                'Content-Type' => 'text/xml; charset=utf-8',
+                'Content-Type' => 'text/xml',
             ])->withBody($xml, 'text/xml')->post($this->apiUrl);
 
             // Log de la réponse
@@ -345,13 +356,15 @@ class MondialRelayRestApi
         // CustomerNo optionnel (max 9, format ^[0-9A-Z]{0,9}$)
         $customerNo = $this->formatFieldUppercase($data['customer_no'] ?? '', 9);
 
-        // ShipmentValue optionnel
-        $shipmentValue = isset($data['shipment_value']) ? (float) $data['shipment_value'] : 0;
-
         // DeliveryInstruction optionnel (max 30)
         $deliveryInstruction = $this->formatFieldUppercase($data['delivery_instruction'] ?? '', 30);
 
-        // Construire le XML
+        // Helper pour générer balise vide ou avec valeur
+        $xmlElement = function($name, $value) {
+            return empty($value) ? "<{$name} />" : "<{$name}>".$this->xmlEscape($value)."</{$name}>";
+        };
+
+        // Construire le XML selon l'ordre strict de l'exemple ligne 381
         $xml = '<?xml version="1.0" encoding="utf-8"?>
 <ShipmentCreationRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.example.org/Request">
     <Context>
@@ -367,131 +380,51 @@ class MondialRelayRestApi
     </OutputOptions>
     <ShipmentsList>
         <Shipment>
-            <OrderNo>'.$this->xmlEscape($orderNo).'</OrderNo>';
-
-        // CustomerNo optionnel
-        if (!empty($customerNo)) {
-            $xml .= '
-            <CustomerNo>'.$this->xmlEscape($customerNo).'</CustomerNo>';
-        }
-
-        $xml .= '
-            <ParcelCount>1</ParcelCount>';
-
-        // ShipmentValue optionnel mais recommandé
-        if ($shipmentValue > 0) {
-            $xml .= '
-            <ShipmentValue Amount="'.number_format($shipmentValue, 2, '.', '').'" Currency="EUR" />';
-        }
-
-        $xml .= '
+            <OrderNo>'.$this->xmlEscape($orderNo).'</OrderNo>
+            '.$xmlElement('CustomerNo', $customerNo).'
+            <ParcelCount>1</ParcelCount>
             <DeliveryMode Mode="'.$this->xmlEscape($data['delivery_mode']).'" Location="'.$this->xmlEscape($locationId).'" />
             <CollectionMode Mode="CCC" Location="" />
-
             <Parcels>
                 <Parcel>
                     <Content>'.$this->xmlEscape($content).'</Content>
                     <Weight Value="'.$weightGrams.'" Unit="gr" />
                 </Parcel>
-            </Parcels>';
-
-        // DeliveryInstruction optionnel
-        if (!empty($deliveryInstruction)) {
-            $xml .= '
-            <DeliveryInstruction>'.$this->xmlEscape($deliveryInstruction).'</DeliveryInstruction>';
-        }
-
-        // Sender Address
-        $xml .= '
-
+            </Parcels>
+            '.$xmlElement('DeliveryInstruction', $deliveryInstruction).'
             <Sender>
-                <Address>';
-
-        if (!empty($sender['Title'])) {
-            $xml .= '
-                    <Title>'.$this->xmlEscape($sender['Title']).'</Title>';
-        }
-
-        $xml .= '
-                    <Firstname>'.$this->xmlEscape($sender['Firstname']).'</Firstname>
-                    <Lastname>'.$this->xmlEscape($sender['Lastname']).'</Lastname>
-                    <Streetname>'.$this->xmlEscape($sender['Streetname']).'</Streetname>';
-
-        if (!empty($sender['HouseNo'])) {
-            $xml .= '
-                    <HouseNo>'.$this->xmlEscape($sender['HouseNo']).'</HouseNo>';
-        }
-
-        $xml .= '
+                <Address>
+                    '.$xmlElement('Title', $sender['Title']).'
+                    '.$xmlElement('Firstname', $sender['Firstname']).'
+                    '.$xmlElement('Lastname', $sender['Lastname']).'
+                    '.$xmlElement('Streetname', $sender['Streetname']).'
+                    '.$xmlElement('HouseNo', $sender['HouseNo']).'
                     <CountryCode>'.$this->xmlEscape($sender['CountryCode']).'</CountryCode>
                     <PostCode>'.$this->xmlEscape($sender['PostCode']).'</PostCode>
-                    <City>'.$this->xmlEscape($sender['City']).'</City>';
-
-        if (!empty($sender['AddressAdd1'])) {
-            $xml .= '
-                    <AddressAdd1>'.$this->xmlEscape($sender['AddressAdd1']).'</AddressAdd1>';
-        }
-        if (!empty($sender['AddressAdd2'])) {
-            $xml .= '
-                    <AddressAdd2>'.$this->xmlEscape($sender['AddressAdd2']).'</AddressAdd2>';
-        }
-        if (!empty($sender['AddressAdd3'])) {
-            $xml .= '
-                    <AddressAdd3>'.$this->xmlEscape($sender['AddressAdd3']).'</AddressAdd3>';
-        }
-        if (!empty($sender['PhoneNo'])) {
-            $xml .= '
-                    <PhoneNo>'.$this->xmlEscape($sender['PhoneNo']).'</PhoneNo>';
-        }
-
-        $xml .= '
-                    <MobileNo>'.$this->xmlEscape($sender['MobileNo']).'</MobileNo>
+                    <City>'.$this->xmlEscape($sender['City']).'</City>
+                    '.$xmlElement('AddressAdd1', $sender['AddressAdd1']).'
+                    '.$xmlElement('AddressAdd2', $sender['AddressAdd2']).'
+                    '.$xmlElement('AddressAdd3', $sender['AddressAdd3']).'
+                    '.$xmlElement('PhoneNo', $sender['PhoneNo']).'
+                    '.$xmlElement('MobileNo', $sender['MobileNo']).'
                     <Email>'.$this->xmlEscape($sender['Email']).'</Email>
                 </Address>
             </Sender>
-
             <Recipient>
-                <Address>';
-
-        if (!empty($recipient['Title'])) {
-            $xml .= '
-                    <Title>'.$this->xmlEscape($recipient['Title']).'</Title>';
-        }
-
-        $xml .= '
-                    <Firstname>'.$this->xmlEscape($recipient['Firstname']).'</Firstname>
-                    <Lastname>'.$this->xmlEscape($recipient['Lastname']).'</Lastname>
-                    <Streetname>'.$this->xmlEscape($recipient['Streetname']).'</Streetname>';
-
-        if (!empty($recipient['HouseNo'])) {
-            $xml .= '
-                    <HouseNo>'.$this->xmlEscape($recipient['HouseNo']).'</HouseNo>';
-        }
-
-        $xml .= '
+                <Address>
+                    '.$xmlElement('Title', $recipient['Title']).'
+                    '.$xmlElement('Firstname', $recipient['Firstname']).'
+                    '.$xmlElement('Lastname', $recipient['Lastname']).'
+                    '.$xmlElement('Streetname', $recipient['Streetname']).'
+                    '.$xmlElement('HouseNo', $recipient['HouseNo']).'
                     <CountryCode>'.$this->xmlEscape($recipient['CountryCode']).'</CountryCode>
                     <PostCode>'.$this->xmlEscape($recipient['PostCode']).'</PostCode>
-                    <City>'.$this->xmlEscape($recipient['City']).'</City>';
-
-        if (!empty($recipient['AddressAdd1'])) {
-            $xml .= '
-                    <AddressAdd1>'.$this->xmlEscape($recipient['AddressAdd1']).'</AddressAdd1>';
-        }
-        if (!empty($recipient['AddressAdd2'])) {
-            $xml .= '
-                    <AddressAdd2>'.$this->xmlEscape($recipient['AddressAdd2']).'</AddressAdd2>';
-        }
-        if (!empty($recipient['AddressAdd3'])) {
-            $xml .= '
-                    <AddressAdd3>'.$this->xmlEscape($recipient['AddressAdd3']).'</AddressAdd3>';
-        }
-        if (!empty($recipient['PhoneNo'])) {
-            $xml .= '
-                    <PhoneNo>'.$this->xmlEscape($recipient['PhoneNo']).'</PhoneNo>';
-        }
-
-        $xml .= '
-                    <MobileNo>'.$this->xmlEscape($recipient['MobileNo']).'</MobileNo>
+                    <City>'.$this->xmlEscape($recipient['City']).'</City>
+                    '.$xmlElement('AddressAdd1', $recipient['AddressAdd1']).'
+                    '.$xmlElement('AddressAdd2', $recipient['AddressAdd2']).'
+                    '.$xmlElement('AddressAdd3', $recipient['AddressAdd3']).'
+                    '.$xmlElement('PhoneNo', $recipient['PhoneNo']).'
+                    '.$xmlElement('MobileNo', $recipient['MobileNo']).'
                     <Email>'.$this->xmlEscape($recipient['Email']).'</Email>
                 </Address>
             </Recipient>
@@ -503,10 +436,15 @@ class MondialRelayRestApi
     }
 
     /**
-     * Échappe les caractères XML
+     * Échappe les caractères XML et supprime les caractères de contrôle invalides
+     * Conforme à la spécification XML 1.0
      */
     private function xmlEscape(string $value): string
     {
+        // Supprimer les caractères de contrôle XML invalides (spec XML 1.0)
+        // Caractères interdits : 0x00-0x08, 0x0B-0x0C, 0x0E-0x1F
+        $value = preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F]/', '', $value);
+
         return htmlspecialchars($value, ENT_XML1, 'UTF-8');
     }
 

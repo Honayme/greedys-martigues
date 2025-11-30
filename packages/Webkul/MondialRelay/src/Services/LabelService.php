@@ -9,7 +9,7 @@ use Webkul\Sales\Models\Order;
 class LabelService
 {
     public function __construct(
-        protected MondialRelayApi $api
+        protected MondialRelayRestApi $restApi
     ) {}
 
     /**
@@ -51,26 +51,33 @@ class LabelService
             throw new Exception('Poids total invalide. Vérifiez les poids produits.');
         }
 
-        // Récupérer l'adresse expéditeur depuis la config ou base de données
-        $senderData = $this->getSenderData();
+        // Récupérer l'adresse expéditeur brute
+        $rawSenderData = $this->getSenderData();
 
-        // Préparer les infos destinataire selon le mode de livraison
-        $recipientData = $this->getRecipientData($mrData, $customerAddress, $order);
+        // Préparer les infos destinataire brutes selon le mode de livraison
+        $rawRecipientData = $this->getRecipientData($mrData, $customerAddress, $order);
 
-        // Préparer les données pour l'API
-        $orderData = [
-            'order_id'        => $order->id,
-            'customer_id'     => $order->customer_id ?? '',
-            'delivery_mode'   => $mrData->delivery_mode,
-            'point_relais_id' => $mrData->point_relais_id,
-            'weight'          => $totalWeight,
-            'amount'          => $order->grand_total,
-            'sender'          => $senderData,
-            'recipient'       => $recipientData,
+        // Préparer les adresses brutes (le formatage strict se fera dans MondialRelayRestApi)
+        $senderData = $this->prepareAddressData($rawSenderData);
+        $recipientData = $this->prepareAddressData($rawRecipientData);
+
+        // Préparer les données pour l'API REST V2
+        $shipmentData = [
+            'order_id'             => (string) $order->id,
+            'customer_no'          => $order->customer_id ? (string) $order->customer_id : '',
+            'delivery_mode'        => $mrData->delivery_mode,
+            'point_relais_id'      => $mrData->point_relais_id,
+            'weight'               => $totalWeight,
+            'shipment_value'       => $order->grand_total,
+            'content'              => 'Produits e-commerce',
+            'delivery_instruction' => '',
+            'sender'               => $senderData,
+            'recipient'            => $recipientData,
         ];
 
-        // Log complet des données avant création d'étiquette
-        \Log::info('MR Label Creation Data', [
+        // Log détaillé pour debug
+        \Log::info('MR REST API V2 - Label Creation Data', [
+            'api_version'          => 'V2 REST',
             'order_id'             => $order->id,
             'shipping_method'      => $order->shipping_method,
             'customer_address_raw' => [
@@ -88,13 +95,20 @@ class LabelService
                 'point_relais_city'     => $mrData->point_relais_city ?? 'NULL',
                 'point_relais_postcode' => $mrData->point_relais_postcode ?? 'NULL',
             ],
-            'order_data_prepared' => $orderData,
-            'total_weight'        => $totalWeight,
-            'total_amount'        => $order->grand_total,
+            'shipment_data_prepared' => $shipmentData,
+            'total_weight_kg'        => $totalWeight,
+            'total_weight_grams'     => ($totalWeight * 1000),
+            'total_amount'           => $order->grand_total,
         ]);
 
-        // Appel API
-        $result = $this->api->createLabel($orderData);
+        // Appel API REST V2
+        $result = $this->restApi->createShipment($shipmentData);
+
+        \Log::info('MR REST API V2 - Label Created Successfully', [
+            'order_id'        => $order->id,
+            'tracking_number' => $result['tracking_number'],
+            'label_url'       => $result['label_url'],
+        ]);
 
         // Mise à jour des données MR
         $mrData->update([
@@ -114,11 +128,12 @@ class LabelService
         $customerPhone = $customerAddress->phone ?? '';
         $customerEmail = $order->customer_email;
 
-        // Pour Point Relais et Locker : livraison au point relais
-        if ($mrData->delivery_mode === '24R' || $mrData->delivery_mode === '24L') {
+        // Pour Point Relais et Locker : livraison au point relais (les deux utilisent le code 24R)
+        if ($mrData->delivery_mode === '24R') {
             return [
                 'name'     => $customerName, // Nom du client pour retrait
                 'address'  => $mrData->point_relais_address ?? '',
+                'address2' => '',
                 'city'     => $mrData->point_relais_city ?? '',
                 'postcode' => $mrData->point_relais_postcode ?? '',
                 'country'  => $mrData->point_relais_country ?? 'FR',
@@ -130,7 +145,8 @@ class LabelService
         // Pour Domicile : livraison à l'adresse du client
         return [
             'name'     => $customerName,
-            'address'  => $customerAddress->address ?? '',
+            'address'  => $customerAddress->address1 ?? $customerAddress->address ?? '',
+            'address2' => $customerAddress->address2 ?? '',
             'city'     => $customerAddress->city ?? '',
             'postcode' => $customerAddress->postcode ?? '',
             'country'  => $customerAddress->country ?? 'FR',
@@ -140,18 +156,72 @@ class LabelService
     }
 
     /**
-     * Récupère les données expéditeur
-     * TODO: À adapter selon ta config
+     * Prépare les données d'adresse brutes (le formatage strict se fait dans MondialRelayRestApi)
+     * @param array $addressData ['name', 'address', 'address2', 'city', 'postcode', 'country', 'phone', 'email']
+     * @return array
+     */
+    private function prepareAddressData(array $addressData): array
+    {
+        // Séparation nom/prénom simple
+        $fullName = trim($addressData['name'] ?? '');
+        $parts = explode(' ', $fullName);
+
+        if (count($parts) > 1) {
+            $lastname = array_pop($parts);
+            $firstname = implode(' ', $parts);
+        } else {
+            $firstname = $fullName;
+            $lastname = '.';
+        }
+
+        // Préparer les données brutes - le formatage strict se fera dans MondialRelayRestApi
+        return [
+            'Title'       => '',
+            'Firstname'   => $firstname,
+            'Lastname'    => $lastname,
+            'Streetname'  => trim(($addressData['address'] ?? '') . ' ' . ($addressData['address2'] ?? '')),
+            'HouseNo'     => '',
+            'City'        => $addressData['city'] ?? '',
+            'PostCode'    => $addressData['postcode'] ?? '',
+            'CountryCode' => strtoupper($addressData['country'] ?? 'FR'),
+            'AddressAdd1' => '',
+            'AddressAdd2' => '',
+            'AddressAdd3' => '',
+            'PhoneNo'     => $addressData['phone'] ?? '',
+            'MobileNo'    => $addressData['phone'] ?? '',
+            'Email'       => $addressData['email'] ?? '',
+        ];
+    }
+
+    /**
+     * Récupère les données expéditeur depuis la configuration Bagisto
+     *
+     * @throws Exception
      */
     private function getSenderData(): array
     {
+        $phone = core()->getConfigData('sales.shipping.origin.contact');
+
+        if (empty($phone)) {
+            throw new Exception('Le numéro de téléphone expéditeur doit être configuré dans Admin > Configuration > Sales > Shipping Settings > Origin > Contact Number');
+        }
+
+        $address = core()->getConfigData('sales.shipping.origin.address');
+        $city = core()->getConfigData('sales.shipping.origin.city');
+        $postcode = core()->getConfigData('sales.shipping.origin.zipcode');
+
+        if (empty($address) || empty($city) || empty($postcode)) {
+            throw new Exception('L\'adresse expéditeur est incomplète. Vérifiez Admin > Configuration > Sales > Shipping Settings > Origin');
+        }
+
         return [
             'name'     => core()->getConfigData('sales.shipping.origin.store_name') ?? 'Greedy\'s Martigues',
-            'address'  => core()->getConfigData('sales.shipping.origin.address') ?? '',
-            'city'     => core()->getConfigData('sales.shipping.origin.city') ?? '',
-            'postcode' => core()->getConfigData('sales.shipping.origin.zipcode') ?? '',
+            'address'  => $address,
+            'address2' => '',
+            'city'     => $city,
+            'postcode' => $postcode,
             'country'  => core()->getConfigData('sales.shipping.origin.country') ?? 'FR',
-            'phone'    => core()->getConfigData('sales.shipping.origin.contact') ?? '',
+            'phone'    => $phone,
             'email'    => core()->getConfigData('emails.configure.email_settings.shop_email_from')
                       ?? config('mail.from.address')
                       ?? 'contact@greedyscreation.com',

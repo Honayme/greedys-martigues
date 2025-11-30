@@ -2,6 +2,8 @@
 
 Intégration complète de Mondial Relay dans Bagisto : Point Relais, Locker, Domicile avec génération d'étiquettes.
 
+**Important** : Les Lockers et Points Relais utilisent le même code service Mondial Relay (24R). La différence se fait via le Location ID du point sélectionné.
+
 ## 🎯 Big Picture : Comment ça marche
 
 ### Flow complet
@@ -40,7 +42,8 @@ Intégration complète de Mondial Relay dans Bagisto : Point Relais, Locker, Dom
 **📦 Composants principaux**
 
 - **MondialRelay (Carrier)** : Calcule les tarifs au checkout (3 modes)
-- **MondialRelayApi (Service)** : Communication SOAP avec API Mondial Relay
+- **MondialRelayApi (Service)** : Communication SOAP avec API V1 (recherche points relais)
+- **MondialRelayRestApi (Service)** : Communication REST avec API V2 (création étiquettes)
 - **LabelService** : Orchestration génération d'étiquettes
 - **OrderObserver** : Capture création commande → sauvegarde données MR
 - **OrderMondialRelay (Model)** : Table BDD pour infos livraison MR
@@ -59,10 +62,11 @@ Intégration complète de Mondial Relay dans Bagisto : Point Relais, Locker, Dom
 
 **⚙️ Points techniques clés**
 
-1. **Signature MD5** : Tous les appels API nécessitent une signature calculée avec les paramètres + clé privée
-2. **Adresse intelligente** : Le système switche automatiquement entre adresse client et adresse point relais selon le mode
-3. **Poids Bagisto** : Utilise `qty_ordered` (pas `quantity`) et `weight` des produits
-4. **Events Bagisto** : Injection des vues via `bagisto.shop.checkout.onepage.shipping.after` et `bagisto.admin.sales.order.left_component.after`
+1. **Dual API** : API V1 SOAP (recherche) + API V2 REST (étiquettes)
+2. **Validation stricte** : Téléphone obligatoire (regex France), poids 10g-30kg
+3. **Adresse intelligente** : Le système switche automatiquement entre adresse client et adresse point relais selon le mode
+4. **Poids Bagisto** : Utilise `qty_ordered` (pas `quantity`) et `weight` des produits
+5. **Events Bagisto** : Injection des vues via `bagisto.shop.checkout.onepage.shipping.after` et `bagisto.admin.sales.order.left_component.after`
 
 ## Installation
 
@@ -75,23 +79,35 @@ Le package est déjà installé. Il suffit de configurer.
 Allez dans **Admin > Configuration > Sales > Shipping Methods > Mondial Relay**
 
 Remplissez :
-- **Status** : Activer
-- **URL API** : `https://api.mondialrelay.com/WebService.asmx`
-- **Code Enseigne** : Fourni par Mondial Relay
-- **Clé Privée** : Fournie par Mondial Relay
-- **Code Marque** : Fourni par Mondial Relay
+
+**API V1 (SOAP) - Recherche Points Relais**
+- **Code Enseigne** : `CC23JOIN`
+- **Clé Privée** : `QaMz6mTT`
+- **Code Marque** : `CC`
+- **URL API V1** : `https://api.mondialrelay.com/WebService.asmx`
+
+**API V2 (REST) - Création Étiquettes**
+- **URL API V2** : `https://connect-api.mondialrelay.com/api/shipment`
+- **Login API V2** : `CC23JOIN@business-api.mondialrelay.com`
+- **Password API V2** : `-jTqc7ps1>wAbBYuh3p3`
+- **Brand ID** : `CC23JOIN`
+
+**Options**
+- **Format étiquette** : 10x15, A4 ou A5
 - Cochez les modes que vous voulez activer (Point Relais / Locker / Domicile)
-
-**⚠️ Credentials de test** :
-- Code Enseigne : `TTMRSDBX`
-- Clé Privée : `9ytnxVCC`
-- Code Marque : `TT`
-
-**Ces credentials sont pour les TESTS uniquement. Remplacez-les par vos vrais credentials en production.**
 
 ### Configuration expéditeur
 
-Dans **Admin > Configuration > Sales > Shipping Settings > Origin**, renseignez votre adresse expéditeur (obligatoire pour les étiquettes).
+Dans **Admin > Configuration > Sales > Shipping Settings > Origin**, renseignez votre adresse expéditeur :
+
+- **Store Name** : Nom de votre boutique
+- **Address** : Adresse complète
+- **City** : Ville
+- **Postcode** : Code postal
+- **Country** : FR
+- **Contact Number** : ⚠️ **OBLIGATOIRE** - Téléphone au format `0XXXXXXXXX` ou `+33XXXXXXXXX`
+
+**Important** : Le numéro de téléphone expéditeur est obligatoire pour l'API V2. Sans lui, la génération d'étiquette échouera.
 
 ## Tarification
 
@@ -119,30 +135,49 @@ Sur une commande utilisant Mondial Relay :
 
 ## API Mondial Relay utilisée
 
+**API V1 (SOAP)**
 - `WSI3_PointRelais_Recherche` : Recherche de points relais
-- `WSI2_CreationEtiquette` : Génération d'étiquettes
+
+**API V2 (REST)**
+- `POST /api/shipment` : Création d'expédition et génération d'étiquettes (format XML)
 
 ## Structure BDD
 
 Nouvelle table `order_mondial_relay` :
 - `order_id` : Lien vers la commande
-- `delivery_mode` : 24R (Point Relais) / 24L (Locker) / LD1 (Domicile)
-- `point_relais_id` : ID du point sélectionné
+- `delivery_mode` : 24R (Point Relais & Locker) / HOM (Domicile)
+- `point_relais_id` : ID du point sélectionné (distingue Locker vs Point Relais)
+- `point_relais_*` : Adresse complète du point relais ou locker
 - `tracking_number` : Numéro de suivi (après génération)
 - `label_url` : URL de l'étiquette PDF
 
-## TODO avant prod
+## Validations et Contraintes
 
-1. ✅ Tester l'API en mode test
-2. ❌ Remplacer les credentials test par les vrais
-3. ❌ Tester une vraie commande
-4. ❌ Imprimer une étiquette
-5. ❌ Renseigner les vrais tarifs domicile (LD1)
+**Téléphone**
+- Format obligatoire : `0XXXXXXXXX` ou `+33XXXXXXXXX`
+- Requis pour expéditeur ET destinataire
+- Validation par regex selon documentation MR
 
-## Problèmes connus
+**Poids**
+- Minimum : 10 grammes
+- Maximum : 30 kg
+- Calculé automatiquement depuis les produits
 
-- Les tarifs **Domicile (LD1)** sont temporaires (5€ / 5,50€ / 6€). À remplacer par les vrais tarifs.
-- L'adresse expéditeur est récupérée depuis la config Bagisto. Vérifiez qu'elle est complète.
+**Codes service Mondial Relay**
+- `24R` : Point Relais et Locker standard (jusqu'à 30kg)
+- `24L` : Point Relais XL (20-30kg, nécessite autorisation spéciale) - **NON utilisé dans ce package**
+- `HOM` : Livraison domicile
+- `LD1` : Code tiers non officiel - **NON utilisé**
+
+## TODO
+
+1. ✅ Migration API V2 REST
+2. ✅ Validation téléphone stricte
+3. ✅ Gestion formats étiquette
+4. ⏳ Tester création étiquette Point Relais
+5. ⏳ Tester création étiquette Locker
+6. ⏳ Tester création étiquette Domicile
+7. ⏳ Vérifier impression étiquettes PDF
 
 ## Support
 

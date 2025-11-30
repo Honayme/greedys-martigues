@@ -4,8 +4,8 @@ namespace Webkul\MondialRelay\Http\Controllers\Admin;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Controller;
-use Webkul\MondialRelay\Services\LabelService;
 use Webkul\MondialRelay\Models\OrderMondialRelay;
+use Webkul\MondialRelay\Services\LabelService;
 
 class LabelController extends Controller
 {
@@ -21,10 +21,10 @@ class LabelController extends Controller
         try {
             $result = $this->labelService->generateLabel($orderId);
 
-            session()->flash('success', 'Étiquette générée avec succès. Numéro de suivi: ' . $result['tracking_number']);
+            session()->flash('success', 'Étiquette générée avec succès. Numéro de suivi: '.$result['tracking_number']);
 
         } catch (\Exception $e) {
-            session()->flash('error', 'Erreur génération étiquette: ' . $e->getMessage());
+            session()->flash('error', 'Erreur génération étiquette: '.$e->getMessage());
         }
 
         return redirect()->back();
@@ -40,6 +40,7 @@ class LabelController extends Controller
 
             if (empty($mrData->label_url)) {
                 session()->flash('error', 'Aucune étiquette générée pour cette commande');
+
                 return redirect()->back();
             }
 
@@ -47,7 +48,8 @@ class LabelController extends Controller
             return redirect()->away($mrData->label_url);
 
         } catch (\Exception $e) {
-            session()->flash('error', 'Erreur téléchargement étiquette: ' . $e->getMessage());
+            session()->flash('error', 'Erreur téléchargement étiquette: '.$e->getMessage());
+
             return redirect()->back();
         }
     }

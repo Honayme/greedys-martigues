@@ -55,11 +55,11 @@ class OrderObserver
     private function getDeliveryMode(string $shippingMethod): string
     {
         if (str_contains($shippingMethod, 'point_relais')) {
-            return '24R';
+            return '24R';  // Point Relais standard
         } elseif (str_contains($shippingMethod, 'locker')) {
-            return '24L';
+            return '24R';  // Locker (même code que Point Relais, distingué par Location ID)
         } elseif (str_contains($shippingMethod, 'domicile')) {
-            return 'HOM'; // Compte Professionnel Standard (LD1 = Grands Comptes uniquement)
+            return 'HOM';  // Livraison domicile
         }
 
         return '24R'; // Défaut

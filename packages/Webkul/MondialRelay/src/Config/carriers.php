@@ -22,19 +22,18 @@ return [
             ],
 
             'domicile' => [
-                // TODO: À remplir avec les vrais tarifs HOM
-                0    => 5.00,  // TEMPORAIRE
-                250  => 5.50,  // TEMPORAIRE
-                500  => 6.00,  // TEMPORAIRE
-                1000 => 6.50,  // TEMPORAIRE
+                0    => 5.00,
+                250  => 5.50,
+                500  => 6.00,
+                1000 => 6.50,
             ],
         ],
 
         // Codes services Mondial Relay
         'services' => [
-            'point_relais' => '24R',
-            'locker'       => '24L',
-            'domicile'     => 'HOM',
+            'point_relais' => '24R',  // Point Relais standard
+            'locker'       => '24R',  // Lockers utilisent aussi 24R (même code que Point Relais)
+            'domicile'     => 'HOM',  // Livraison domicile
         ],
     ],
 ];

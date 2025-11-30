@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('order_mondial_relay', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('order_id');
-            $table->string('delivery_mode', 10); // 24R, 24L, LD1
+            $table->string('delivery_mode', 10); // 24R (Point Relais & Locker), HOM (Domicile)
             $table->string('point_relais_id', 20)->nullable();
             $table->string('point_relais_name')->nullable();
             $table->text('point_relais_address')->nullable();

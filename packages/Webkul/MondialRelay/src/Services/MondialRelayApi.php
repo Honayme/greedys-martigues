@@ -76,18 +76,6 @@ class MondialRelayApi
     }
 
     /**
-     * Nettoie un numéro de téléphone pour l'API Mondial Relay
-     * Garde uniquement les chiffres (supprime espaces, tirets, parenthèses, etc.)
-     */
-    private function cleanPhone(string $phone): string
-    {
-        // Supprimer tous les caractères sauf chiffres
-        $phone = preg_replace('/[^0-9]/', '', $phone);
-
-        return $phone;
-    }
-
-    /**
      * Recherche de points relais
      *
      * @param  string  $postcode  Code postal
@@ -262,121 +250,7 @@ class MondialRelayApi
     }
 
     /**
-     * Création d'une étiquette
-     *
-     * @param  array  $orderData  Données de la commande
-     * @return array ['tracking_number', 'label_url']
+     * @deprecated Utiliser MondialRelayRestApi::createShipment() à la place (API V2 REST)
+     * Cette méthode est conservée uniquement pour référence
      */
-    public function createLabel(array $orderData): array
-    {
-        // Déterminer si livraison en point relais (24R/24L) ou à domicile (HOM)
-        $isPointRelais = in_array($orderData['delivery_mode'], ['24R', '24L']);
-
-        // Paramètres 1-45 pour le calcul de la signature MD5 (Texte est EXCLU de la signature)
-        $paramsForSignature = [
-            'Enseigne'     => $this->codeEnseigne,
-            'ModeCol'      => 'CCC', // Collecte par le commerçant
-            'ModeLiv'      => $orderData['delivery_mode'], // 24R, 24L, HOM
-            'NDossier'     => (string) $orderData['order_id'],
-            'NClient'      => (string) ($orderData['customer_id'] ?? ''),
-            'Expe_Langage' => 'FR',
-            'Expe_Ad1'     => substr($this->cleanString($orderData['sender']['name']), 0, 32),
-            'Expe_Ad2'     => '',
-            'Expe_Ad3'     => substr($this->cleanString($orderData['sender']['address']), 0, 32),
-            'Expe_Ad4'     => '',
-            'Expe_Ville'   => substr($this->cleanString($orderData['sender']['city']), 0, 26),
-            'Expe_CP'      => $orderData['sender']['postcode'],
-            'Expe_Pays'    => $orderData['sender']['country'],
-            'Expe_Tel1'    => $this->cleanPhone(! empty($orderData['sender']['phone']) ? $orderData['sender']['phone'] : '0760088934'),
-            'Expe_Tel2'    => '',
-            'Expe_Mail'    => $orderData['sender']['email'],
-            'Dest_Langage' => 'FR',
-            'Dest_Ad1'     => substr($this->cleanString($orderData['recipient']['name']), 0, 32),
-            'Dest_Ad2'     => '',
-            'Dest_Ad3'     => substr($this->cleanString($orderData['recipient']['address']), 0, 32),
-            'Dest_Ad4'     => '',
-            'Dest_Ville'   => substr($this->cleanString($orderData['recipient']['city']), 0, 26),
-            'Dest_CP'      => $orderData['recipient']['postcode'],
-            'Dest_Pays'    => $orderData['recipient']['country'],
-            'Dest_Tel1'    => $this->cleanPhone($orderData['recipient']['phone']),
-            'Dest_Tel2'    => '',
-            'Dest_Mail'    => $orderData['recipient']['email'],
-            'Poids'        => (string) ($orderData['weight'] * 1000), // En grammes
-            'Longueur'     => '0',
-            'Taille'       => 'XS', // XS obligatoire pour les petits colis
-            'NbColis'      => '1',
-            'CRT_Valeur'   => '0', // Pas de contre-remboursement (commande déjà payée)
-            'CRT_Devise'   => 'EUR',
-            'Exp_Valeur'   => (string) round($orderData['amount'] * 100),
-            'Exp_Devise'   => 'EUR',
-            'COL_Rel_Pays' => '',
-            'COL_Rel'      => '',
-            'LIV_Rel_Pays' => $isPointRelais ? ($orderData['recipient']['country'] ?? 'FR') : '',
-            'LIV_Rel'      => $isPointRelais ? ($orderData['point_relais_id'] ?? '') : '',
-            'TAvisage'     => '',
-            'TReprise'     => '',
-            'Montage'      => '0',
-            'TRDV'         => '',
-            'Assurance'    => '0',
-            'Instructions' => '',
-        ];
-
-        // Calculer la signature MD5 avec les paramètres 1-45 (sans Texte)
-        $signature = $this->calculateSignature($paramsForSignature);
-
-        // Construire le tableau final dans l'ordre API : paramètres 1-45, Security (#46), Texte (#47)
-        $params = $paramsForSignature;
-        $params['Security'] = $signature;
-        $params['Texte'] = '';
-
-        // Debug: logger les paramètres pour vérification de la signature
-        $signatureString = implode('', array_values($paramsForSignature)).$this->privateKey;
-        \Log::info('MR Signature Debug', [
-            'params_for_signature' => $paramsForSignature,
-            'concatenated_string'  => $signatureString,
-            'calculated_signature' => strtoupper(md5($signatureString)),
-            'private_key_used'     => $this->privateKey,
-        ]);
-
-        // Debug: logger les paramètres envoyés
-        \Log::info('MR CreateLabel Request', [
-            'params'    => $params,
-            'signature' => $params['Security'],
-        ]);
-
-        try {
-            $client = $this->getClient();
-            $response = $client->WSI2_CreationEtiquette($params);
-
-            // Logger la requête SOAP brute pour debug
-            \Log::info('MR SOAP Request XML', [
-                'request' => $client->__getLastRequest(),
-            ]);
-
-            \Log::info('MR CreateLabel Response', [
-                'stat'     => $response->WSI2_CreationEtiquetteResult->STAT ?? 'N/A',
-                'response' => json_encode($response),
-            ]);
-
-            if (isset($response->WSI2_CreationEtiquetteResult->STAT)
-                && $response->WSI2_CreationEtiquetteResult->STAT == 0) {
-
-                $labelUrl = $response->WSI2_CreationEtiquetteResult->URL_Etiquette ?? '';
-
-                // Si l'URL est relative, préfixer avec le domaine Mondial Relay
-                if (! empty($labelUrl) && str_starts_with($labelUrl, '/')) {
-                    $labelUrl = 'https://www.mondialrelay.com'.$labelUrl;
-                }
-
-                return [
-                    'tracking_number' => $response->WSI2_CreationEtiquetteResult->ExpeditionNum ?? '',
-                    'label_url'       => $labelUrl,
-                ];
-            }
-
-            throw new Exception('Erreur création étiquette: '.($response->WSI2_CreationEtiquetteResult->STAT ?? 'Inconnue'));
-        } catch (SoapFault $e) {
-            throw new Exception('Erreur SOAP création étiquette: '.$e->getMessage());
-        }
-    }
 }

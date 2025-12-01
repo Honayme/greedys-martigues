@@ -10,6 +10,10 @@
     <p class="!leading-6 text-gray-600 dark:text-gray-300">
         {{ $address->address }}<br>
 
+        @if($address->address2)
+            {{ $address->address2 }}<br>
+        @endif
+
         {{ $address->city }}<br>
 
         {{ $address->state }}<br>

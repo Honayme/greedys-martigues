@@ -81,7 +81,7 @@ class LabelService
             'order_id'             => $order->id,
             'shipping_method'      => $order->shipping_method,
             'customer_address_raw' => [
-                'address1' => $customerAddress->address1 ?? 'NULL',
+                'address'  => $customerAddress->address ?? 'NULL',
                 'address2' => $customerAddress->address2 ?? 'NULL',
                 'city'     => $customerAddress->city ?? 'NULL',
                 'postcode' => $customerAddress->postcode ?? 'NULL',
@@ -143,9 +143,13 @@ class LabelService
         }
 
         // Pour Domicile : livraison à l'adresse du client
+        // Extraire la première ligne de l'adresse (si multiple lignes avec PHP_EOL)
+        $addressLines = explode(PHP_EOL, $customerAddress->address ?? '');
+        $mainAddress = trim($addressLines[0] ?? '');
+
         return [
             'name'     => $customerName,
-            'address'  => $customerAddress->address1 ?? $customerAddress->address ?? '',
+            'address'  => $mainAddress,
             'address2' => $customerAddress->address2 ?? '',
             'city'     => $customerAddress->city ?? '',
             'postcode' => $customerAddress->postcode ?? '',

@@ -22,17 +22,17 @@ class EventServiceProvider extends ServiceProvider
 
         // Injecter le champ address2 dans le formulaire checkout
         \Event::listen('bagisto.shop.checkout.onepage.address.form.address.after', function($viewRenderEventManager) {
-            $viewRenderEventManager->addTemplate('address-fields.address2-checkout');
+            $viewRenderEventManager->addTemplate('shop::address-fields.address2-checkout');
         });
 
         // Injecter le champ address2 dans le formulaire création adresse client
         \Event::listen('bagisto.shop.customers.account.addresses.create_form_controls.street_address.after', function($viewRenderEventManager) {
-            $viewRenderEventManager->addTemplate('address-fields.address2-customer');
+            $viewRenderEventManager->addTemplate('shop::address-fields.address2-customer');
         });
 
         // Injecter le champ address2 dans le formulaire édition adresse client
         \Event::listen('bagisto.shop.customers.account.addresses.edit_form_controls.street-addres.after', function($viewRenderEventManager) {
-            $viewRenderEventManager->addTemplate('address-fields.address2-customer-edit');
+            $viewRenderEventManager->addTemplate('shop::address-fields.address2-customer-edit');
         });
     }
 }

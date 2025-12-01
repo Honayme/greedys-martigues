@@ -236,9 +236,9 @@
     <body dir="{{ core()->getCurrentLocale()->direction }}">
         <div class="logo-container {{ core()->getCurrentLocale()->direction }}">
             @if (core()->getConfigData('sales.invoice_settings.pdf_print_outs.logo'))
-                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(Storage::url(core()->getConfigData('sales.invoice_settings.pdf_print_outs.logo')))) }}"/>
+                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(Storage::url(core()->getConfigData('sales.invoice_settings.pdf_print_outs.logo')))) }}" style="max-width: 50px; max-height: 50px;"/>
             @elseif (core()->getCurrentChannel()->logo)
-                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(Storage::url(core()->getCurrentChannel()->logo))) }}"/>
+                <img src="data:image/png;base64,{{ base64_encode(file_get_contents(Storage::url(core()->getCurrentChannel()->logo))) }}" style="max-width: 50px; max-height: 50px;"/>
             @endif
         </div>
         

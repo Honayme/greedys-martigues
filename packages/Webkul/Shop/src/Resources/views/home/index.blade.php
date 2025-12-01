@@ -66,4 +66,7 @@
                 @break
         @endswitch
     @endforeach
+
+    <!-- Testimonials Section (from theme) -->
+    @includeIf('shop::home.testimonials-section')
 </x-shop::layouts>

@@ -50,6 +50,64 @@
 
         @bagistoVite(['src/Resources/assets/css/app.css', 'src/Resources/assets/js/app.js'])
 
+        <!-- Google Fonts - Material Icons -->
+        <link
+            rel="preload stylesheet"
+            as="style"
+            href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined&display=block"
+        >
+
+        <!-- Google Fonts - Roboto -->
+        <link
+            rel="preload stylesheet"
+            as="style"
+            href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        >
+
+        <!-- Google Fonts - Fredoka -->
+        <link
+            rel="preload stylesheet"
+            as="style"
+            href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap"
+        >
+
+        <!-- Font Calina Custom -->
+        <style>
+            @font-face {
+                font-family: 'Calina';
+                src: url('{{ asset("themes/default/assets/fonts/Calina.ttf") }}') format('truetype'),
+                     url('{{ asset("themes/default/assets/fonts/Calina.otf") }}') format('opentype');
+                font-weight: normal;
+                font-style: normal;
+                font-display: swap;
+            }
+
+            [data-ninja-font="calina_regular_normal_q2fsa"] {
+                font-family: 'Calina', serif;
+            }
+
+            /* Appliquer Fredoka Light comme font par défaut à toute l'application */
+            * {
+                font-family: 'Fredoka', sans-serif !important;
+                font-weight: 300 !important;
+            }
+
+            /* Conserver Calina pour les éléments avec data-ninja-font */
+            [data-ninja-font="calina_regular_normal_q2fsa"] {
+                font-family: 'Calina', cursive !important;
+            }
+
+            /* Utiliser Material Icons pour les icônes */
+            .material-icons-outlined {
+                font-family: 'Material Icons Outlined' !important;
+            }
+
+            /* Fredoka disponible via classe */
+            .font-fredoka {
+                font-family: 'Fredoka', sans-serif !important;
+            }
+        </style>
+
         <link
             rel="preload"
             href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"

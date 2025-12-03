@@ -2,10 +2,10 @@
 
 return [
     [
-        'key'  => 'sales.carriers.mondialrelay',
-        'name' => 'Mondial Relay',
-        'info' => 'Configure Mondial Relay shipping (Point Relais, Locker, Domicile)',
-        'sort' => 3,
+        'key'    => 'sales.carriers.mondialrelay',
+        'name'   => 'Mondial Relay',
+        'info'   => 'Configure Mondial Relay shipping (Point Relais, Locker, Domicile)',
+        'sort'   => 3,
         'fields' => [
             [
                 'name'          => 'title',

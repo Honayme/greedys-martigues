@@ -30,7 +30,7 @@ class MondialRelayRestApi
 
         // Validation format CustomerId (Brand ID) : ^[0-9A-Z]{2}[0-9A-Z]{6}$
         // 8 caractères alphanumériques majuscules (2 premiers + 6 suivants)
-        if (!empty($this->brandId) && !preg_match('/^[0-9A-Z]{2}[0-9A-Z]{6}$/', $this->brandId)) {
+        if (! empty($this->brandId) && ! preg_match('/^[0-9A-Z]{2}[0-9A-Z]{6}$/', $this->brandId)) {
             throw new \Exception('CustomerId (Brand ID) invalide : doit être 8 caractères alphanumériques majuscules (ex: CC23JOIN)');
         }
     }
@@ -220,7 +220,7 @@ class MondialRelayRestApi
     /**
      * Formate les noms (Title, Firstname, Lastname) avec contrainte combinée max 32 caractères
      *
-     * @param array $names ['title' => '', 'firstname' => '', 'lastname' => '']
+     * @param  array  $names  ['title' => '', 'firstname' => '', 'lastname' => '']
      * @return array Noms formatés
      */
     private function formatNames(array $names): array
@@ -250,25 +250,25 @@ class MondialRelayRestApi
         }
 
         return [
-            'title' => $title,
+            'title'     => $title,
             'firstname' => $firstname,
-            'lastname' => $lastname,
+            'lastname'  => $lastname,
         ];
     }
 
     /**
      * Formate une adresse complète selon les règles Mondial Relay
      *
-     * @param array $address Données brutes de l'adresse
+     * @param  array  $address  Données brutes de l'adresse
      * @return array Adresse formatée et validée
      */
     private function formatAddress(array $address): array
     {
         // Formater les noms avec contrainte 32 caractères
         $names = $this->formatNames([
-            'title' => $address['Title'] ?? '',
+            'title'     => $address['Title'] ?? '',
             'firstname' => $address['Firstname'] ?? '',
-            'lastname' => $address['Lastname'] ?? '',
+            'lastname'  => $address['Lastname'] ?? '',
         ]);
 
         // Séparer numéro de rue et nom de rue si possible
@@ -282,20 +282,20 @@ class MondialRelayRestApi
         }
 
         return [
-            'Title' => $names['title'],
-            'Firstname' => $names['firstname'],
-            'Lastname' => $names['lastname'],
-            'Streetname' => $this->formatFieldUppercase($streetname, 40),
-            'HouseNo' => $this->formatFieldUppercase($houseNo, 10),
+            'Title'       => $names['title'],
+            'Firstname'   => $names['firstname'],
+            'Lastname'    => $names['lastname'],
+            'Streetname'  => $this->formatFieldUppercase($streetname, 40),
+            'HouseNo'     => $this->formatFieldUppercase($houseNo, 10),
             'CountryCode' => strtoupper(substr($address['CountryCode'] ?? 'FR', 0, 2)),
-            'PostCode' => $this->formatPostCode($address['PostCode'] ?? '', 10),
-            'City' => $this->formatFieldMixedCase($address['City'] ?? '', 2, 30),
+            'PostCode'    => $this->formatPostCode($address['PostCode'] ?? '', 10),
+            'City'        => $this->formatFieldMixedCase($address['City'] ?? '', 2, 30),
             'AddressAdd1' => $this->formatFieldUppercase($address['AddressAdd1'] ?? '', 30),
             'AddressAdd2' => $this->formatFieldUppercase($address['AddressAdd2'] ?? '', 30),
             'AddressAdd3' => $this->formatFieldUppercase($address['AddressAdd3'] ?? '', 30),
-            'PhoneNo' => $this->formatPhone($address['PhoneNo'] ?? ''),
-            'MobileNo' => $this->formatPhone($address['MobileNo'] ?? ''),
-            'Email' => substr($address['Email'] ?? '', 0, 70),
+            'PhoneNo'     => $this->formatPhone($address['PhoneNo'] ?? ''),
+            'MobileNo'    => $this->formatPhone($address['MobileNo'] ?? ''),
+            'Email'       => substr($address['Email'] ?? '', 0, 70),
         ];
     }
 
@@ -360,7 +360,7 @@ class MondialRelayRestApi
         $deliveryInstruction = $this->formatFieldUppercase($data['delivery_instruction'] ?? '', 30);
 
         // Helper pour générer balise vide ou avec valeur
-        $xmlElement = function($name, $value) {
+        $xmlElement = function ($name, $value) {
             return empty($value) ? "<{$name} />" : "<{$name}>".$this->xmlEscape($value)."</{$name}>";
         };
 
@@ -384,7 +384,7 @@ class MondialRelayRestApi
             '.$xmlElement('CustomerNo', $customerNo).'
             <ParcelCount>1</ParcelCount>
             <DeliveryMode Mode="'.$this->xmlEscape($data['delivery_mode']).'" Location="'.$this->xmlEscape($locationId).'" />
-            <CollectionMode Mode="CCC" Location="" />
+            <CollectionMode Mode="REL" Location="FR-021269" />
             <Parcels>
                 <Parcel>
                     <Content>'.$this->xmlEscape($content).'</Content>

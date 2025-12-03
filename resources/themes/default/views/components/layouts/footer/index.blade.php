@@ -50,7 +50,7 @@
                 <div class="flex items-start max-1060:w-full max-1060:justify-center">
                     <iframe
                         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2897.8724547845147!2d5.051744315558838!3d43.40465977913199!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12c9ed6e5c6b7b5b%3A0x1234567890abcdef!2s17%20Rue%20Gambetta%2C%2013500%20Martigues!5e0!3m2!1sfr!2sfr!4v1234567890123!5m2!1sfr!2sfr"
-                        width="500"
+                        width="800"
                         height="200"
                         style="border:3px solid white; border-radius:10px;"
                         allowfullscreen=""

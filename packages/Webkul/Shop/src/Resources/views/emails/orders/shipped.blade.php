@@ -132,22 +132,31 @@
                         @lang('shop::app.emails.orders.carrier') :
                         <strong style="color: #121A26;">{{ $shipment->carrier_title }}</strong>
                     </p>
-                    <p style="margin-top: 0; margin-bottom: 20px;">
+                    <p style="margin-top: 0; margin-bottom: 10px;">
                         Numéro de suivi :
-                        <strong style="color: #121A26;">{{ $shipment->track_number }}</strong>
+                        <strong style="color: #121A26; font-size: 18px;">{{ $shipment->track_number }}</strong>
                     </p>
+                    @if ($shipment->carrier_title == 'Mondial Relay')
+                        <p style="margin-top: 15px; margin-bottom: 20px; padding: 15px; background-color: #F1F5F9; border-left: 3px solid #2969FF; border-radius: 4px;">
+                            <strong style="color: #121A26;">Pour suivre votre colis :</strong><br/>
+                            Copiez le numéro de suivi ci-dessus et rendez-vous sur :<br/>
+                            <a href="https://www.mondialrelay.fr/suivi-de-colis/" target="_blank" style="color: #2969FF; text-decoration: underline;">
+                                https://www.mondialrelay.fr/suivi-de-colis/
+                            </a>
+                        </p>
+                    @endif
                 </div>
 
                 {{-- Bouton de suivi centré --}}
                 <table width="100%" cellpadding="0" cellspacing="0" border="0">
                     <tr>
                         <td align="center" style="padding-top: 10px; padding-bottom: 10px;">
-                            @if ($shipment->carrier_title == 'Mondial Relay' && $shipment->track_number && $shipment->order->shipping_address->postcode)
-                                {{-- Bouton de suivi direct pour Mondial Relay --}}
-                                <a href="https://www.mondialrelay.fr/suivi-de-colis/?numeroExpedition={{ $shipment->track_number }}&codePostal={{ $shipment->order->shipping_address->postcode }}"
+                            @if ($shipment->carrier_title == 'Mondial Relay')
+                                {{-- Bouton vers la page de suivi Mondial Relay --}}
+                                <a href="https://www.mondialrelay.fr/suivi-de-colis/"
                                    target="_blank"
                                    style="font-size: 15px; font-weight: 600; color: #FFFFFF; text-decoration: none; display: inline-block; padding: 14px 28px; border-radius: 4px; background-color: #2969FF;">
-                                    Suivre ma commande
+                                    Accéder au suivi Mondial Relay
                                 </a>
                             @else
                                 {{-- Fallback : Lien générique ou simple affichage si les infos manquent --}}

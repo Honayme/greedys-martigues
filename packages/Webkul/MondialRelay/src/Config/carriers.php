@@ -10,7 +10,7 @@ return [
         'default_rate' => '3.49',
         'type'         => 'per_order',
 
-        // Tarifs pro 0-9 colis/mois (HT)
+        // Tarifs pro 0-9 colis/mois (HT - la TVA de 20% est ajoutée automatiquement dans le code)
         'pricing' => [
             'locker' => 2.99,
 

@@ -11,6 +11,11 @@ class MondialRelay extends AbstractShipping
     protected $code = 'mondialrelay';
 
     /**
+     * Taux de TVA applicable aux services de livraison (20% en France)
+     */
+    const TVA_RATE = 1.20;
+
+    /**
      * Calcule les tarifs disponibles
      *
      * @return array|false
@@ -110,6 +115,7 @@ class MondialRelay extends AbstractShipping
 
     /**
      * Calcule le prix selon le poids et le type de livraison
+     * Les prix de base sont HT, la TVA est appliquée automatiquement
      */
     private function calculatePrice(float $weightKg, string $deliveryMode): float
     {
@@ -117,27 +123,31 @@ class MondialRelay extends AbstractShipping
 
         $pricing = config("carriers.mondialrelay.pricing.{$deliveryMode}");
 
+        $priceHT = 0;
+
         // Locker: tarif fixe
         if ($deliveryMode === 'locker') {
-            return $pricing;
+            $priceHT = $pricing;
         }
-
         // Point Relais / Domicile: tarif par tranche de poids
-        if (is_array($pricing)) {
+        elseif (is_array($pricing)) {
             if ($weightGrams <= 250) {
-                return $pricing[0];
+                $priceHT = $pricing[0];
             } elseif ($weightGrams <= 500) {
-                return $pricing[250];
+                $priceHT = $pricing[250];
             } elseif ($weightGrams <= 1000) {
-                return $pricing[500];
+                $priceHT = $pricing[500];
             } else {
                 // Au-delà de 1kg, prendre le dernier tarif
-                return $pricing[1000];
+                $priceHT = $pricing[1000];
             }
+        } else {
+            // Fallback
+            $priceHT = $this->getConfigData('default_rate') ?? 5.00;
         }
 
-        // Fallback
-        return $this->getConfigData('default_rate') ?? 5.00;
+        // Appliquer la TVA (20%)
+        return round($priceHT * self::TVA_RATE, 2);
     }
 
     /**

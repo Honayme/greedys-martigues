@@ -52,34 +52,8 @@
 
                 {!! view_render_event('bagisto.shop.categories.toolbar.pagination.before') !!}
 
-                <!-- Right Side: Limit + Filter Button -->
+                <!-- Right Side: Filter Button -->
                 <div class="flex items-center gap-4">
-                    <!-- Product Pagination Limit -->
-                    <x-shop::dropdown position="bottom-right">
-                        <x-slot:toggle>
-                            <!-- Dropdown Toggler -->
-                            <button class="flex w-full max-w-[200px] cursor-pointer items-center justify-between gap-4 rounded-lg border border-zinc-200 bg-white p-3.5 text-base transition-all hover:border-gray-400 focus:border-gray-400 max-md:w-[110px] max-md:border-0 max-md:pl-2.5 max-md:pr-2.5">
-                                @{{ filters.applied.limit ?? "@lang('shop::app.categories.toolbar.show')" }}
-
-                                <span
-                                    class="icon-arrow-down text-2xl"
-                                    role="presentation"
-                                ></span>
-                            </button>
-                        </x-slot>
-
-                        <!-- Dropdown Content -->
-                        <x-slot:menu>
-                            <x-shop::dropdown.menu.item
-                                v-for="(limit, key) in filters.available.limit"
-                                ::class="{'bg-gray-100': limit == filters.applied.limit}"
-                                @click="apply('limit', limit)"
-                            >
-                                @{{ limit }}
-                            </x-shop::dropdown.menu.item>
-                        </x-slot>
-                    </x-shop::dropdown>
-
                     <!-- Bouton Filtrer -->
                     <button
                         @click="$emit('open-filter-drawer')"
@@ -172,8 +146,6 @@
                     for (let key in this.filters.applied) {
                         if (this.filters.applied[key] != this.filters.default[key]) {
                             filters[key] = this.filters.applied[key];
-                        } else {
-                            filters= this.filters.default;
                         }
                     }
 

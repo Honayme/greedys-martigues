@@ -40,7 +40,9 @@ class TransactionController extends Controller
             return datagrid(OrderTransactionDataGrid::class)->process();
         }
 
-        $paymentMethods = Payment::getSupportedPaymentMethods();
+        $paymentMethods = [
+            'payment_methods' => Payment::getAllPaymentMethods(),
+        ];
 
         return view('admin::sales.transactions.index', compact('paymentMethods'));
     }

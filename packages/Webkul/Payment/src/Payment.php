@@ -66,6 +66,39 @@ class Payment
     }
 
     /**
+     * Returns all payment methods without checking availability
+     * Used in admin context where cart is not available
+     *
+     * @return array
+     */
+    public function getAllPaymentMethods()
+    {
+        $paymentMethods = [];
+
+        foreach (Config::get('payment_methods') as $paymentMethodConfig) {
+            $paymentMethod = app($paymentMethodConfig['class']);
+
+            $paymentMethods[] = [
+                'method'       => $paymentMethod->getCode(),
+                'method_title' => $paymentMethod->getTitle(),
+                'description'  => $paymentMethod->getDescription(),
+                'sort'         => $paymentMethod->getSortOrder(),
+                'image'        => $paymentMethod->getImage(),
+            ];
+        }
+
+        usort($paymentMethods, function ($a, $b) {
+            if ($a['sort'] == $b['sort']) {
+                return 0;
+            }
+
+            return ($a['sort'] < $b['sort']) ? -1 : 1;
+        });
+
+        return $paymentMethods;
+    }
+
+    /**
      * Returns payment method additional information
      *
      * @param  string  $code

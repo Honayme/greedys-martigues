@@ -226,6 +226,12 @@ class ProductRepository extends Repository
             $params['name'] = $params['query'];
         }
 
+        // DEBUG: Log les paramètres de recherche
+        \Log::info('=== SEARCH DEBUG ===');
+        \Log::info('Params reçus:', $params);
+        \Log::info('Query param:', ['query' => $params['query'] ?? 'NULL']);
+        \Log::info('Name param:', ['name' => $params['name'] ?? 'NULL']);
+
         $query = $this->with([
             'attribute_family',
             'images',
@@ -283,6 +289,10 @@ class ProductRepository extends Repository
              */
             $filterableAttributes = $this->attributeRepository->getProductDefaultAttributes(array_keys($params));
 
+            // DEBUG: Log les attributs récupérés
+            \Log::info('Array keys params:', array_keys($params));
+            \Log::info('Filterable attributes codes:', $filterableAttributes->pluck('code')->toArray());
+
             /**
              * Filter the required attributes.
              */
@@ -292,6 +302,9 @@ class ProductRepository extends Repository
                 'visible_individually',
                 'url_key',
             ]);
+
+            // DEBUG: Log les attributs filtrés
+            \Log::info('Filtered attributes codes:', $attributes->pluck('code')->toArray());
 
             /**
              * Filter collection by required attributes.
@@ -305,8 +318,14 @@ class ProductRepository extends Repository
                 if ($attribute->code == 'name') {
                     $synonyms = $this->searchSynonymRepository->getSynonymsByQuery(urldecode($params['name']));
 
+                    // DEBUG: Log les synonymes et le filtre
+                    \Log::info('Attribut NAME trouvé!');
+                    \Log::info('Synonymes pour recherche:', $synonyms);
+                    \Log::info('Alias de la table:', ['alias' => $alias]);
+
                     $qb->where(function ($subQuery) use ($alias, $synonyms) {
                         foreach ($synonyms as $synonym) {
+                            \Log::info('Ajout du filtre LIKE pour:', ['synonym' => $synonym]);
                             $subQuery->orWhere($alias.'.text_value', 'like', '%'.$synonym.'%');
                         }
                     });

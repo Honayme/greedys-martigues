@@ -202,6 +202,14 @@
                 computed: {
                     queryParams() {
                         let queryParams = Object.assign({}, this.filters.filter, this.filters.toolbar);
+
+                        // Ajouter le paramètre query depuis l'URL
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const searchQuery = urlParams.get('query');
+                        if (searchQuery) {
+                            queryParams.query = searchQuery;
+                        }
+
                         return this.removeJsonEmptyValues(queryParams);
                     },
                     queryString() {
@@ -222,6 +230,15 @@
                 },
 
                 mounted() {
+                    // Initialiser le filtre avec le paramètre query de l'URL
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const searchQuery = urlParams.get('query');
+
+                    if (searchQuery) {
+                        // Stocker query dans les filtres pour qu'il soit inclus dans queryParams
+                        this.filters.toolbar.query = searchQuery;
+                    }
+
                     this.observeLoadMoreTrigger();
                 },
 

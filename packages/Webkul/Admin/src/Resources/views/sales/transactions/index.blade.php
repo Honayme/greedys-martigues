@@ -386,7 +386,7 @@
 
                 data() {
                     return {
-                        paymentMethods: @json(payment()->getSupportedPaymentMethods()['payment_methods']),
+                        paymentMethods: @json($paymentMethods['payment_methods']),
                     };
                 },
 

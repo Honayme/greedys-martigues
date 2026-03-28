@@ -59,17 +59,17 @@
         <ul class="flex items-center space-x-6 text-base font-medium text-gray-700" style="position:relative;z-index:1;flex-shrink:0;">
             <li class="relative mx-4">
                 <a href="https://www.facebook.com/stephane.moustachatte.5" class="hover:opacity-70 transition">
-                    <img src="{{ asset('storage/social-icons/facebook.svg') }}" alt="Facebook" style="width:24px;height:24px;display:block;">
+                    <img src="{{ asset('images/social-icons/facebook.svg') }}" alt="Facebook" style="width:24px;height:24px;display:block;">
                 </a>
             </li>
             <li class="relative mx-4">
                 <a href="https://www.instagram.com/greedyscreation_/?hl=fr" class="hover:opacity-70 transition">
-                    <img src="{{ asset('storage/social-icons/instagram.svg') }}" alt="Instagram" style="width:24px;height:24px;display:block;">
+                    <img src="{{ asset('images/social-icons/instagram.svg') }}" alt="Instagram" style="width:24px;height:24px;display:block;">
                 </a>
             </li>
             <li class="relative mx-4">
                 <a href="https://www.tiktok.com/@kmillewardrobe" class="hover:opacity-70 transition">
-                    <img src="{{ asset('storage/social-icons/tiktok.svg') }}" alt="TikTok" style="width:24px;height:24px;display:block;">
+                    <img src="{{ asset('images/social-icons/tiktok.svg') }}" alt="TikTok" style="width:24px;height:24px;display:block;">
                 </a>
             </li>
         </ul>

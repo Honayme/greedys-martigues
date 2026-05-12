@@ -28,9 +28,7 @@
         </div>
     </div>
 
-    <v-search>
-        <x-shop::shimmer.categories.view/>
-    </v-search>
+    <v-search></v-search>
 
     @pushOnce('scripts')
         <script type="text/x-template" id="v-search-template">

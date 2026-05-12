@@ -30,3 +30,8 @@ yarn.lock
 yarn-error.log
 .claude
 /product-gallery
+/graphify-out
+/tmp
+/docs
+
+CLAUDE.md

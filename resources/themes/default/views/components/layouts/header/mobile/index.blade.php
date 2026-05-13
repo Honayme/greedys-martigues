@@ -107,7 +107,7 @@
             <div class="flex items-center gap-x-5 max-md:gap-x-4">
                 <ul class="flex items-center space-x-6 text-base font-medium text-gray-700" style="position:relative;z-index:1;flex-shrink:0;">
                     <li class="relative mx-4">
-                        <a href="https://www.facebook.com/stephane.moustachatte.5" class="hover:opacity-70 transition
+                        <a href="https://www.facebook.com/stephane.moustachatte.5" class="hover:opacity-70 transition">
                             <img src="{{ asset('images/social-icons/facebook.svg') }}" alt="Facebook" style="width:20px;height:20px;display:block;">
                         </a>
                     </li>

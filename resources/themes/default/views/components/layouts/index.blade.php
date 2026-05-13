@@ -100,6 +100,8 @@
             /* Utiliser Material Icons pour les icônes */
             .material-icons-outlined {
                 font-family: 'Material Icons Outlined' !important;
+                font-weight: normal !important;
+                font-style: normal;
             }
 
             /* Fredoka disponible via classe */

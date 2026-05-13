@@ -56,7 +56,7 @@
                         allowfullscreen=""
                         loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade"
-                        class="max-sm:w-full"
+                        class="w-full max-w-[800px]"
                     ></iframe>
                 </div>
             </div>

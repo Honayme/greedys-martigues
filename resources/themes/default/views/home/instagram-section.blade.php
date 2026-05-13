@@ -78,18 +78,35 @@
 
     .instagram-post {
         position: relative;
-        aspect-ratio: 1;
         overflow: hidden;
         background: #e8e0d0;
         cursor: pointer;
         border-radius: 4px;
+        /* Fallback iOS < 15 */
+        padding-top: 100%;
+        height: 0;
     }
 
     .instagram-post img {
+        position: absolute;
+        top: 0;
+        left: 0;
         width: 100%;
         height: 100%;
         object-fit: cover;
         transition: transform 0.4s ease;
+    }
+
+    @supports (aspect-ratio: 1) {
+        .instagram-post {
+            aspect-ratio: 1;
+            padding-top: 0;
+            height: auto;
+        }
+
+        .instagram-post img {
+            position: static;
+        }
     }
 
     .instagram-post:hover img {
@@ -98,7 +115,10 @@
 
     .instagram-overlay {
         position: absolute;
-        inset: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
         background: rgba(6, 12, 59, 0.7);
         opacity: 0;
         transition: opacity 0.3s ease;

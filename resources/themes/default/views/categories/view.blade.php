@@ -60,6 +60,43 @@
         </v-category>
     @endif
 
+    @push('styles')
+        <style>
+            /* 1. Force Black Overlay */
+            .custom-overlay {
+                background-color: rgba(0, 0, 0, 0.5) !important;
+            }
+
+            /* 2. Fade Transition (Overlay) */
+            .fade-enter-active,
+            .fade-leave-active {
+                transition: opacity 0.5s ease-in-out;
+            }
+            .fade-enter-from,
+            .fade-leave-to {
+                opacity: 0;
+            }
+            .fade-enter-to,
+            .fade-leave-from {
+                opacity: 1;
+            }
+
+            /* 3. Slide Transition (Sidebar) */
+            .slide-enter-active,
+            .slide-leave-active {
+                transition: transform 0.5s ease-in-out;
+            }
+            .slide-enter-from,
+            .slide-leave-to {
+                transform: translateX(100%);
+            }
+            .slide-enter-to,
+            .slide-leave-from {
+                transform: translateX(0);
+            }
+        </style>
+    @endpush
+
     @pushOnce('scripts')
         <script
             type="text/x-template"
@@ -401,40 +438,5 @@
                 },
             });
         </script>
-
-        <style>
-            /* 1. Force Black Overlay */
-            .custom-overlay {
-                background-color: rgba(0, 0, 0, 0.5) !important;
-            }
-
-            /* 2. Fade Transition (Overlay) */
-            .fade-enter-active,
-            .fade-leave-active {
-                transition: opacity 0.5s ease-in-out;
-            }
-            .fade-enter-from,
-            .fade-leave-to {
-                opacity: 0;
-            }
-            .fade-enter-to,
-            .fade-leave-from {
-                opacity: 1;
-            }
-
-            /* 3. Slide Transition (Sidebar) */
-            .slide-enter-active,
-            .slide-leave-active {
-                transition: transform 0.5s ease-in-out;
-            }
-            .slide-enter-from,
-            .slide-leave-to {
-                transform: translateX(100%);
-            }
-            .slide-enter-to,
-            .slide-leave-from {
-                transform: translateX(0);
-            }
-        </style>
     @endPushOnce
 </x-shop::layouts>
